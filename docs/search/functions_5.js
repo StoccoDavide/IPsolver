@@ -1,5 +1,5 @@
 var searchData=
 [
   ['solve_0',['solve',['../class_i_psolver_1_1_solver.html#a59a25a07232dd604132b3ed8451a4408',1,'IPsolver::Solver']]],
-  ['solver_1',['Solver',['../class_i_psolver_1_1_solver.html#a07153184ccdd3f45a99bda79c098a155',1,'IPsolver::Solver']]]
+  ['solver_1',['Solver',['../class_i_psolver_1_1_solver.html#a07d328192073f61ab7600deaccdc7361',1,'IPsolver::Solver::Solver()'],['../class_i_psolver_1_1_solver.html#a377cad2b50390e6fc3bc91a07d4b7e1b',1,'IPsolver::Solver::Solver(ObjectiveFunc objective, ObjectiveGradientFunc objective_gradient, ConstraintsFunc constraints, ConstraintsJacobianFunc constraints_jacobian, LagrangianHessianFunc lagrangian_hessian)'],['../class_i_psolver_1_1_solver.html#ad23ad9aeac4776b8f9b80b7efe5dc413',1,'IPsolver::Solver::Solver(ObjectiveFunc objective, ObjectiveGradientFunc objective_gradient, ObjectiveHessianFunc objective_hessian, ConstraintsFunc constraints, ConstraintsJacobianFunc constraints_jacobian, LagrangianHessianFunc lagrangian_hessian)'],['../class_i_psolver_1_1_solver.html#ac6b2e477735a180c2a0b56cca572dfd6',1,'IPsolver::Solver::Solver(const Solver &amp;)=delete'],['../class_i_psolver_1_1_solver.html#a6900fffdbba94dd98b258cb7bc70b633',1,'IPsolver::Solver::Solver(Solver &amp;&amp;)=delete']]]
 ];

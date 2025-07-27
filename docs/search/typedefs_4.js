@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['jacobianfunc_0',['JacobianFunc',['../class_i_psolver_1_1_solver.html#afabf0365a88d6c4e2e574625fe5f8b87',1,'IPsolver::Solver']]]
+  ['matrix_0',['Matrix',['../class_i_psolver_1_1_solver.html#ab10e75668dbe4559dfd3e736f75dab68',1,'IPsolver::Solver']]]
 ];

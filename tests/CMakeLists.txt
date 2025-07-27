@@ -10,6 +10,10 @@
 
 include(IPsolverCatch2)
 
-file(GLOB_RECURSE TEST_SMALL_EXAMPLE "${CMAKE_CURRENT_SOURCE_DIR}/test_small_example.cc")
-add_executable(test_small_example ${TEST_SMALL_EXAMPLE})
-target_link_libraries(test_small_example PRIVATE IPsolver Catch2::Catch2WithMain)
+file(GLOB_RECURSE TEST_QPROG "${CMAKE_CURRENT_SOURCE_DIR}/test_qprog.cc")
+add_executable(test_qprog ${TEST_QPROG})
+target_link_libraries(test_qprog PRIVATE IPsolver Catch2::Catch2WithMain)
+
+file(GLOB_RECURSE TEST_LOGISTIC "${CMAKE_CURRENT_SOURCE_DIR}/test_logistic.cc")
+add_executable(test_logistic ${TEST_LOGISTIC})
+target_link_libraries(test_logistic PRIVATE IPsolver Catch2::Catch2WithMain)

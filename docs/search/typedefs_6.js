@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['objectivefunc_0',['ObjectiveFunc',['../class_i_psolver_1_1_solver.html#a953ad1877e476e3ef85ea499079072dc',1,'IPsolver::Solver']]]
+  ['vector_0',['Vector',['../class_i_psolver_1_1_solver.html#aac4ca02033f365576ed29b6accf17a9f',1,'IPsolver::Solver']]]
 ];

@@ -27,6 +27,11 @@
 //   H. P. Schwefel (1995) Evolution and Optimum Seeking.
 //
 // The minimium occurs at (0,1,2,-1).
+//
+//                                                                    Peter Carbonetto
+//                                                                    Dept. of Computer Science
+//                                                                    University of British Columbia
+//                                                                    Copyright 2008
 
 // STL includes
 #include <vector>
@@ -39,16 +44,16 @@
 // IPsolver includes
 #include "IPsolver.hh"
 
-// Define the number of optimization variables and constraints
-constexpr int n{4};
-constexpr int m{3};
-
 // Define the template test case for the small example
 TEMPLATE_TEST_CASE("IPsolver small example", "[template]", double, float)
 {
   using Integer = typename IPsolver::Integer;
   using Vector  = typename IPsolver::Solver<TestType>::Vector;
   using Matrix  = typename IPsolver::Solver<TestType>::Matrix;
+
+  // Define the number of optimization variables and constraints
+  constexpr Integer n{4};
+  constexpr Integer m{3};
 
   // Define the Hessian of the objective function
   Matrix H(Matrix::Zero(n, n));
@@ -73,17 +78,13 @@ TEMPLATE_TEST_CASE("IPsolver small example", "[template]", double, float)
   b << 5, 8, 10;
 
   // Objective function
-  auto objective = [H, q](const Vector& x) -> TestType {
-    return 0.5 * x.transpose() * H * x + q.dot(x);
-  };
+  auto objective = [&H, &q](const Vector& x) -> TestType {return 0.5 * x.transpose() * H * x + q.dot(x);};
 
   // Gradient of the objective
-  auto gradient = [H, q](const Vector& x) -> Vector {
-    return H * x + q;
-  };
+  auto objective_gradient = [&H, &q](const Vector& x) -> Vector {return H * x + q;};
 
   // Constraints ci(x) = 0.5 * xᵀ P[i] x + r[i]ᵀ x - b[i] < 0
-  auto constraints = [P, r, b](const Vector& x) -> Vector
+  auto constraints = [&P, &r, &b](const Vector& x) -> Vector
   {
     Vector c(b.size());
     for (Integer i{0}; i < b.size(); ++i) {
@@ -92,33 +93,42 @@ TEMPLATE_TEST_CASE("IPsolver small example", "[template]", double, float)
     return c;
   };
 
-  // Jacobian and constraint Hessian
-  auto jacobian = [P, r, b](const Vector& x, const Vector& z) -> std::pair<Matrix, Matrix>
+  // Jacobian of the constraints
+  auto constraints_jacobian = [&P, &r, &b](const Vector& x, const Vector& /*z*/) -> Matrix
   {
     Integer n{static_cast<Integer>(x.size())};
     Integer m{static_cast<Integer>(b.size())};
     Matrix J(m, n);
-    Matrix W = Matrix::Zero(n, n); // W = sum z_i * P[i]
-
     for (Integer i{0}; i < m; ++i) {
       J.row(i) = x.transpose() * P[i] + r[i].transpose();
-      W += z(i) * P[i];
     }
-    return {J, W};
+    return J;
   };
 
-  // Initial guess
-  Vector x_guess(Vector::Zero(n));
+  // Lagrangian Hessian
+  auto lagrangian_hessian = [P, b](const Vector& x, const Vector& z) -> Matrix
+  {
+    Integer n{static_cast<Integer>(x.size())};
+    Integer m{static_cast<Integer>(b.size())};
+    Matrix W(Matrix::Zero(n, n)); // W = sum z_i * P[i]
+    for (Integer i{0}; i < m; ++i) {
+      W += z(i) * P[i];
+    }
+    return W;
+  };
 
-  // Create solver
-  IPsolver::Solver<TestType> solver(objective, gradient, constraints, jacobian);
+  // Create the solver
+  IPsolver::Solver<TestType> solver(
+    objective, objective_gradient, constraints, constraints_jacobian, lagrangian_hessian
+  );
   solver.descent_direction(IPsolver::Solver<TestType>::Descent::BFGS);
   solver.tolerance(1e-6);
   solver.max_iterations(100);
   solver.verbose(true);
 
   // Solve the optimization problem
-  Vector x_sol = solver.solve(x_guess);
+  Vector x_guess(Vector::Zero(n));
+  Vector x_sol(solver.solve(x_guess));
 
   // Check the solution
   Vector sol(n);

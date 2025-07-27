@@ -31,17 +31,20 @@ namespace IPsolver {
     using Vector = Eigen::VectorXd; /**< Vector type (Eigen dense dynamic matrix) */
     using Matrix = Eigen::MatrixXd; /**< Matrix type (Eigen dense dynamic matrix) */
 
-    using ObjectiveFunc   = std::function<Real(const Vector&)>;   /**< Objective function type */
-    using GradientFunc    = std::function<Vector(const Vector&)>; /**< Gradient function type */
-    using ConstraintsFunc = std::function<Vector(const Vector&)>; /**< Constraints function type */
-    using JacobianFunc    = std::function<std::pair<Matrix, Matrix>(const Vector&, const Vector&)>; /**< Jacobian function type */
-    // Returns pair<J, W> where J = Jacobian, W = Hessian of constraints
+    using ObjectiveFunc           = std::function<Real(const Vector&)>;   /**< Objective function type */
+    using ObjectiveGradientFunc   = std::function<Vector(const Vector&)>; /**< Gradient function type */
+    using ObjectiveHessianFunc    = std::function<Matrix(const Vector&)>; /**< Hessian function type */
+    using ConstraintsFunc         = std::function<Vector(const Vector&)>; /**< Constraints function type */
+    using ConstraintsJacobianFunc  = std::function<Matrix(const Vector&, const Vector&)>; /**< Jacobian function type */
+    using LagrangianHessianFunc   = std::function<Matrix(const Vector&, const Vector&)>; /**< Hessian of the Lagrangian function type */
 
   private:
-    ObjectiveFunc   m_objective{nullptr};   /**< Objective function \f$ f(\mathbf{x}) \f$ */
-    GradientFunc    m_gradient{nullptr};    /**< Gradient of the objective function \f$ \nabla f(\mathbf{x}) \f$ */
-    ConstraintsFunc m_constraints{nullptr}; /**< Constraints function \f$ g(\mathbf{x}) \f$ */
-    JacobianFunc    m_jacobian{nullptr};    /**< Jacobian of the constraints \f$ J(\mathbf{x}) \f$ */
+    ObjectiveFunc           m_objective{nullptr};            /**< Objective function \f$ f(\mathbf{x}) \f$ */
+    ObjectiveGradientFunc   m_objective_gradient{nullptr};   /**< Gradient of the objective function \f$ \nabla f(\mathbf{x}) \f$ */
+    ObjectiveHessianFunc    m_objective_hessian{nullptr};    /**< Hessian of the objective function \f$ \nabla^2 f(\mathbf{x}) \f$ */
+    ConstraintsFunc         m_constraints{nullptr};          /**< Constraints function \f$ g(\mathbf{x}) \f$ */
+    ConstraintsJacobianFunc m_constraints_jacobian{nullptr}; /**< Jacobian of the constraints \f$ J(\mathbf{x}) \f$ */
+    LagrangianHessianFunc   m_lagrangian_hessian{nullptr};  /**< Hessian of the Lagrangian \f$ W(\mathbf{x}, \mathbf{z}) \f$ */
 
     Descent m_descent{Descent::NEWTON}; /**< Descent direction method */
     Real    m_tolerance{1e-6};          /**< Tolerance for convergence */
@@ -60,17 +63,116 @@ namespace IPsolver {
 
   public:
     /**
+     * \brief Default constructor for the IPSolver class.
+     *
+     * Initializes the solver with default values for the objective, gradient, constraints, and Jacobian functions.
+     */
+    Solver() {};
+
+    /**
      * \brief Constructor for the IPSolver class.
      *
      * Initializes the solver with the provided objective, gradient, constraints, and Jacobian functions.
      * \param[in] objective Objective function handle.
-     * \param[in] gradient Gradient function handle.
+     * \param[in] objective_gradient Gradient of the objective function handle.
      * \param[in] constraints Constraints function handle.
-     * \param[in] jacobian Jacobian function handle.
+     * \param[in] constraints_jacobian Jacobian of the constraints function handle.
+     * \param[in] lagrangian_hessian Hessian of the Lagrangian function handle.
+     * \warning The default descent direction is set to BFGS (approximation of the Hessian).
      */
-    Solver(ObjectiveFunc objective, GradientFunc gradient, ConstraintsFunc constraints, JacobianFunc jacobian)
-      : m_objective(std::move(objective)), m_gradient(std::move(gradient)),
-        m_constraints(std::move(constraints)), m_jacobian(std::move(jacobian)) {}
+    Solver(ObjectiveFunc objective, ObjectiveGradientFunc objective_gradient, ConstraintsFunc constraints,
+      ConstraintsJacobianFunc constraints_jacobian, LagrangianHessianFunc lagrangian_hessian)
+      : m_objective(std::move(objective)), m_objective_gradient(std::move(objective_gradient)),
+        m_constraints(std::move(constraints)), m_constraints_jacobian(std::move(constraints_jacobian)),
+        m_lagrangian_hessian(std::move(lagrangian_hessian)), m_descent(Descent::BFGS)
+    {
+      #define CMD "IPsolver::Solver::Solver(...): "
+
+      IPSOLVER_ASSERT(this->m_objective,
+        CMD "objective function must not be null");
+      IPSOLVER_ASSERT(this->m_objective_gradient,
+        CMD "gradient of the objective function must not be null");
+      IPSOLVER_ASSERT(this->m_constraints,
+        CMD "constraints function must not be null");
+      IPSOLVER_ASSERT(this->m_constraints_jacobian,
+        CMD "jacobian of the constraints function must not be null");
+      IPSOLVER_ASSERT(this->m_lagrangian_hessian,
+        CMD "lagrangian hessian function must not be null");
+
+      #undef CMD
+    }
+
+    /**
+     * \brief Constructor for the IPSolver class (with Hessian).
+     *
+     * Initializes the solver with the provided objective, gradient, constraints, Jacobian, and Hessian functions.
+     * \param[in] objective Objective function handle.
+     * \param[in] objective_gradient Gradient of the objective function handle.
+     * \param[in] objective_hessian Hessian of the objective function handle.
+     * \param[in] constraints Constraints function handle.
+     * \param[in] constraints_jacobian Jacobian of the constraints function handle.
+     * \param[in] lagrangian_hessian Hessian of the Lagrangian function handle.
+     * \warning The default descent direction is set to Newton (exact Hessian).
+     */
+    Solver(ObjectiveFunc objective, ObjectiveGradientFunc objective_gradient, ObjectiveHessianFunc objective_hessian,
+      ConstraintsFunc constraints, ConstraintsJacobianFunc constraints_jacobian, LagrangianHessianFunc lagrangian_hessian)
+      : m_objective(std::move(objective)), m_objective_gradient(std::move(objective_gradient)),
+        m_objective_hessian(std::move(objective_hessian)), m_constraints(std::move(constraints)),
+        m_constraints_jacobian(std::move(constraints_jacobian)), m_lagrangian_hessian(std::move(lagrangian_hessian)),
+        m_descent(Descent::NEWTON)
+    {
+      #define CMD "IPsolver::Solver::Solver(...): "
+
+      IPSOLVER_ASSERT(this->m_objective,
+        CMD "objective function must not be null");
+      IPSOLVER_ASSERT(this->m_objective_gradient,
+        CMD "gradient of the objective function must not be null");
+      IPSOLVER_ASSERT(this->m_objective_hessian,
+        CMD "hessian of the objective function must not be null");
+      IPSOLVER_ASSERT(this->m_constraints,
+        CMD "constraints function must not be null");
+      IPSOLVER_ASSERT(this->m_constraints_jacobian,
+        CMD "jacobian of the constraints function must not be null");
+      IPSOLVER_ASSERT(this->m_lagrangian_hessian,
+        CMD "lagrangian hessian function must not be null");
+
+      #undef CMD
+    }
+
+    /**
+     * \brief Deleted copy constructor.
+     *
+     * This class is not copyable.
+     */
+    Solver(const Solver&) = delete;
+
+    /**
+     * \brief Deleted assignment operator.
+     *
+     * This class is not assignable.
+     */
+    Solver& operator=(const Solver&) = delete;
+
+    /**
+     * \brief Deleted move constructor.
+     *
+     * This class is not movable.
+     */
+    Solver(Solver&&) = delete;
+
+    /**
+     * \brief Deleted move assignment operator.
+     *
+     * This class is not movable.
+     */
+    Solver& operator=(Solver&&) = delete;
+
+    /**
+     * \brief Destructor for the IPSolver class.
+     *
+     * Cleans up resources used by the solver.
+     */
+    ~Solver() = default;
 
     /**
      * \brief Sets the objective function for the solver.
@@ -158,6 +260,7 @@ namespace IPsolver {
     {
       Vector x(x_guess);
       Vector c(this->m_constraints(x));
+      Matrix J, W;
       Integer n{static_cast<Integer>(x.size())};
       Integer m{static_cast<Integer>(c.size())};
       Integer nv{n + m};
@@ -175,17 +278,18 @@ namespace IPsolver {
       Real alpha{0.0};
       Integer ls{0};
 
-      for (Integer iter{1}; iter <= m_max_iterations; ++iter) {
+      for (Integer iter{0}; iter < m_max_iterations; ++iter) {
         Real f{this->m_objective(x)};
         c = this->m_constraints(x);
-        auto [J, W] = this->m_jacobian(x, z);
+        J = this->m_constraints_jacobian(x, z);
+        W = this->m_lagrangian_hessian(x, z);
 
         Vector g;
         if (this->m_descent == Descent::NEWTON) {
-          g = this->m_gradient(x);
-          // B is updated below if BFGS is used
+          g = this->m_objective_gradient(x);
+          B = this->m_objective_hessian(x);
         } else {
-          g = this->m_gradient(x);
+          g = this->m_objective_gradient(x);
         }
 
         Vector r_x{g + J.transpose() * z};
@@ -201,7 +305,7 @@ namespace IPsolver {
         Real mu{std::max(this->m_mu_min, sigma * duality_gap / m)};
 
         if (this->m_verbose) {
-          std::cout << iter << ", " << f << ", " << std::log10(mu) << ", " << sigma << ", "
+          std::cout << iter+1 << ", " << f << ", " << std::log10(mu) << ", " << sigma << ", "
             << r_x.norm() << ", " << r_c.norm() << ", " << alpha << ", " << ls << std::endl;
         }
 
@@ -219,7 +323,7 @@ namespace IPsolver {
         Vector g_b(g - mu * J.transpose() * (1.0 / c_epsilon.array()).matrix());
 
         // Solve (B + W - J' * S * J) * px = -gb
-        Matrix H = B + W - J.transpose() * S_diag * J;
+        Matrix H(B + W - J.transpose() * S_diag * J);
         p_x = H.ldlt().solve(-g_b);
 
         Vector p_z(-(z + mu * (1.0 / c_epsilon.array()).matrix() + S_diag * J * p_x));
@@ -312,7 +416,7 @@ private:
      * \f]
      * where \f$B\f$ is the current Hessian approximation, \f$s\f$ is the step taken,
      * and \f$y\f$ is the gradient difference.
-     * \note The condition \f$y^T s > 0\f$ must be satisfied for the update to be valid.
+     * \note The condition \f$y^\top s > 0\f$ must be satisfied for the update to be valid.
      * \param[in] B Current Hessian approximation.
      * \param[in] s Step taken (s_{k} = x_{k+1} - x_{k}).
      * \param[in] y Gradient difference (g_new - g).
@@ -320,7 +424,7 @@ private:
      */
     Matrix bfgs_update(const Matrix& B, const Vector& s, const Vector& y)
     {
-      if (y.dot(s) <= 0) {IPSOLVER_ERROR("BFGS update condition y^T s > 0 not satisfied");}
+      if (y.dot(s) <= 0) {IPSOLVER_ERROR("BFGS update condition yᵀs > 0 not satisfied");}
       Vector Bs(B * s);
       return B - (Bs * Bs.transpose()) / (s.dot(Bs)) + (y * y.transpose()) / (y.dot(s));
     }
