@@ -1,0 +1,12 @@
+<map id="include/IPsolver.hh" name="include/IPsolver.hh">
+<area shape="rect" id="Node000001" title=" " alt="" coords="29,5,160,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,153,77,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,32,73,80,52,139,47,137,68,78,87,30"/>
+<area shape="rect" id="Node000003" href="$_solver_8hh.html" title=" " alt="" coords="83,79,210,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="105,30,131,65,126,68,101,33"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="130,107,73,146,70,141,127,103"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="101,153,197,178"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="149,105,151,137,145,137,144,105"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="221,153,296,178"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="167,103,228,142,225,146,164,107"/>
+</map>
