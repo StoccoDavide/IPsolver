@@ -150,7 +150,7 @@ Typedefs</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="namespace_i_psolver.html" title="Namespace for the IPsolver library.">IPsolver</a> is a simple yet reasonably robust implementation of a primal-dual interior-point solver for convex programs with convex inequality constraints (it does not handle equality constraints). Precisely speaking, it will compute the solution to the following optimization problem:      </p><p class="formulaDsp">
 \[ \begin{array}{l}
-   \text{minimize} ~ f(\mathbf{x})
+   \text{minimize} ~ f(\mathbf{x}) \\
    \text{subject to} ~ \mathbf{c}(\mathbf{x}) &lt; \mathbf{0}
  \end{array}
 \]
@@ -161,7 +161,7 @@ Typedefs</h2></td></tr>
 <ul>
 <li>Paul Armand, Jean C. Gilbert, Sophie Jan-Jegou. A Feasible BFGS Interior Point Algorithm for Solving Convex Minimization Problems. SIAM Journal on Optimization, Vol. 11, No. 1, pp. 199-222.</li>
 </ul>
-<dl class="section note"><dt>Note</dt><dd>The descent direction can be set to either 'NEWTON' for the Newton search direction, 'BFGS' for the quasi-Newton search direction with the Broyden-Fletcher-Goldfarb-Shanno (BFGS) update, or 'STEEPEST' for the steepest descent direction. The steepest descent direction is often quite bad, and the solver may fail to converge to the solution if you take this option. Also note that we form a quasi-Newton approximation to the objective, not to the Lagrangian (as is usually done). This means that you will always have to provide second-order information about the inequality constraint functions.</dd>
+<dl class="section note"><dt>Note</dt><dd>The descent direction can be set to either <code>NEWTON</code> for the Newton search direction, <code>BFGS</code> for the quasi-Newton search direction with the Broyden-Fletcher-Goldfarb-Shanno (BFGS) update, or <code>STEEPEST</code> for the steepest descent direction. The steepest descent direction is often quite bad, and the solver may fail to converge to the solution if you take this option. Also note that we form a quasi-Newton approximation to the objective, not to the Lagrangian (as is usually done). This means that you will always have to provide second-order information about the inequality constraint functions.</dd>
 <dd>
 If your optimization problem is large (i.e. it involves a lot of optimization variables or inequality constraints) it might speed up the solver to output sparse matrices.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>The interior-point solver may not work very well if your problem is very poorly scaled (i.e. the Hessian of the objective or the Hessian of one of the constraint functions is poorly conditioned). It is up to you to make sure you look at the conditioning of your problem. </dd></dl>

@@ -76,7 +76,7 @@
 * Precisely speaking, it will compute the solution to the following optimization problem:
 * \f[
 *  \begin{array}{l}
-*    \text{minimize} ~ f(\mathbf{x})
+*    \text{minimize} ~ f(\mathbf{x}) \\
 *    \text{subject to} ~ \mathbf{c}(\mathbf{x}) < \mathbf{0}
 *  \end{array}
 * \f]
@@ -90,9 +90,9 @@
 * - Paul Armand, Jean C. Gilbert, Sophie Jan-Jegou. A Feasible BFGS Interior Point Algorithm for
 *   Solving Convex Minimization Problems. SIAM Journal on Optimization, Vol. 11, No. 1, pp. 199-222.
 *
-* \note The descent direction can be set to either 'NEWTON' for the Newton search direction, 'BFGS'
+* \note The descent direction can be set to either \c NEWTON for the Newton search direction, \c BFGS
 * for the quasi-Newton search direction with the Broyden-Fletcher-Goldfarb-Shanno (BFGS) update, or
-* 'STEEPEST' for the steepest descent direction. The steepest descent direction is often quite bad,
+* \c  STEEPEST for the steepest descent direction. The steepest descent direction is often quite bad,
 * and the solver may fail to converge to the solution if you take this option. Also note that we form
 * a quasi-Newton approximation to the objective, not to the Lagrangian (as is usually done). This means
 * that you will always have to provide second-order information about the inequality constraint functions.
