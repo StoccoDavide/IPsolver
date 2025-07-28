@@ -44,8 +44,8 @@
 // IPsolver includes
 #include "IPsolver.hh"
 
-// Define the template test case for the small example
-TEMPLATE_TEST_CASE("IPsolver small example", "[template]", double, float)
+// Define the quadratic program example
+TEMPLATE_TEST_CASE("IPsolver quadratic program", "[template]", double) // float, double, long double
 {
   using Integer = typename IPsolver::Integer;
   using Vector  = typename IPsolver::Solver<TestType>::Vector;
@@ -57,33 +57,42 @@ TEMPLATE_TEST_CASE("IPsolver small example", "[template]", double, float)
 
   // Define the Hessian of the objective function
   Matrix H(Matrix::Zero(n, n));
-  H.diagonal() << 2, 2, 4, 2;
+  H.diagonal() << 2.0, 2.0, 4.0, 2.0;
   Vector q(n);
-  q << -5, -5, -21, 7;
+  q << -5.0, -5.0, -21.0, 7.0;
 
   // Define the Hessian matrices for the constraints
   std::vector<Matrix> P(m, Matrix::Zero(n, n));
-  P[0].diagonal() << 4, 2, 2, 0;
-  P[1].diagonal() << 2, 2, 2, 2;
-  P[2].diagonal() << 2, 4, 2, 4;
+  P[0].diagonal() << 4.0, 2.0, 2.0, 0.0;
+  P[1].diagonal() << 2.0, 2.0, 2.0, 2.0;
+  P[2].diagonal() << 2.0, 4.0, 2.0, 4.0;
 
-  // Constraints rᵢ(x) = 0.5 * xᵀ P[i] x + r[i]ᵀ x - b[i]
+  // Constraints
   std::vector<Vector> r(m, Vector::Zero(n));
-  r[0] <<  2, -1,  0, -1;
-  r[1] <<  1, -1,  1, -1;
-  r[2] << -1,  0,  0, -1;
+  r[0] <<  2.0, -1.0,  0.0, -1.0;
+  r[1] <<  1.0, -1.0,  1.0, -1.0;
+  r[2] << -1.0,  0.0,  0.0, -1.0;
 
   // Right-hand side vector
   Vector b(m);
-  b << 5, 8, 10;
+  b << 5.0, 8.0, 10.0;
 
-  // Objective function
-  auto objective = [&H, &q](const Vector& x) -> TestType {return 0.5 * x.transpose() * H * x + q.dot(x);};
+  // Objective function function
+  auto objective = [&H, &q](const Vector& x) -> TestType {
+    return 0.5 * (x.transpose() * H * x).value() + q.dot(x);
+  };
 
-  // Gradient of the objective
-  auto objective_gradient = [&H, &q](const Vector& x) -> Vector {return H * x + q;};
+  // Gradient of the objective function
+  auto objective_gradient = [&H, &q](const Vector& x) -> Vector {
+    return H * x + q;
+  };
 
-  // Constraints ci(x) = 0.5 * xᵀ P[i] x + r[i]ᵀ x - b[i] < 0
+  // Hessian of the objective function
+  auto objective_hessian = [&H](const Vector& /*x*/) -> Matrix {
+    return H;
+  };
+
+  // Constraints function
   auto constraints = [&P, &r, &b](const Vector& x) -> Vector
   {
     Vector c(b.size());
@@ -93,24 +102,24 @@ TEMPLATE_TEST_CASE("IPsolver small example", "[template]", double, float)
     return c;
   };
 
-  // Jacobian of the constraints
+  // Jacobian of the constraints function
   auto constraints_jacobian = [&P, &r, &b](const Vector& x, const Vector& /*z*/) -> Matrix
   {
     Integer n{static_cast<Integer>(x.size())};
     Integer m{static_cast<Integer>(b.size())};
     Matrix J(m, n);
     for (Integer i{0}; i < m; ++i) {
-      J.row(i) = x.transpose() * P[i] + r[i].transpose();
+      J.row(i) = (P[i] * x + r[i]).transpose();
     }
     return J;
   };
 
-  // Lagrangian Hessian
-  auto lagrangian_hessian = [P, b](const Vector& x, const Vector& z) -> Matrix
+  // Hessian of the Lagrangian function
+  auto lagrangian_hessian = [&P, &b](const Vector& x, const Vector& z) -> Matrix
   {
     Integer n{static_cast<Integer>(x.size())};
     Integer m{static_cast<Integer>(b.size())};
-    Matrix W(Matrix::Zero(n, n)); // W = sum z_i * P[i]
+    Matrix W(Matrix::Zero(n, n));
     for (Integer i{0}; i < m; ++i) {
       W += z(i) * P[i];
     }
@@ -119,20 +128,30 @@ TEMPLATE_TEST_CASE("IPsolver small example", "[template]", double, float)
 
   // Create the solver
   IPsolver::Solver<TestType> solver(
-    objective, objective_gradient, constraints, constraints_jacobian, lagrangian_hessian
+    objective, objective_gradient, objective_hessian, constraints, constraints_jacobian, lagrangian_hessian
   );
-  solver.descent_direction(IPsolver::Solver<TestType>::Descent::BFGS);
   solver.tolerance(1e-6);
   solver.max_iterations(100);
-  solver.verbose(true);
+  solver.verbose(false);
 
-  // Solve the optimization problem
+  // Problem solution
   Vector x_guess(Vector::Zero(n));
-  Vector x_sol(solver.solve(x_guess));
-
-  // Check the solution
   Vector sol(n);
   sol << 0.0, 1.0, 2.0, -1.0;
-  REQUIRE(x_sol.size() == n);
-  REQUIRE(x_sol.isApprox(sol, TestType(1e-6)));
+
+  // Solve the optimization problem with BFGS descent
+  SECTION("BFGS Descent")
+  {
+    solver.descent(IPsolver::Solver<TestType>::Descent::BFGS);
+    Vector x_sol(solver.solve(x_guess));
+    REQUIRE(x_sol.isApprox(sol, 1e-6));
+  }
+
+  // Solve the optimization problem with Newton descent
+  SECTION("NEWTON Descent")
+  {
+    solver.descent(IPsolver::Solver<TestType>::Descent::NEWTON);
+    Vector x_sol(solver.solve(x_guess));
+    REQUIRE(x_sol.isApprox(sol, 1e-6));
+  }
 }

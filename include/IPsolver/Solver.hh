@@ -24,12 +24,15 @@ namespace IPsolver {
   {
   public:
     using Descent = enum class Descent : Integer {
-      NEWTON = 0, /**< Use Newton's method for descent direction */
-      BFGS   = 1  /**< Use BFGS method for descent direction */
+      NEWTON   = 0, /**< Use Newton's method for descent direction */
+      BFGS     = 1, /**< Use BFGS method for descent direction */
+      STEEPEST = 2  /**< Use steepest descent method for descent direction */
     }; /**< Descent direction enumeration */
 
     using Vector = Eigen::VectorXd; /**< Vector type (Eigen dense dynamic matrix) */
     using Matrix = Eigen::MatrixXd; /**< Matrix type (Eigen dense dynamic matrix) */
+    using Array  = Eigen::ArrayXd;  /**< Array type (Eigen dense dynamic array) */
+    using Mask = Eigen::Array<bool, Eigen::Dynamic, 1>; /**< Mask type for Eigen arrays */
 
     using ObjectiveFunc           = std::function<Real(const Vector&)>;   /**< Objective function type */
     using ObjectiveGradientFunc   = std::function<Vector(const Vector&)>; /**< Gradient function type */
@@ -51,7 +54,7 @@ namespace IPsolver {
     Integer m_max_iterations{100};      /**< Maximum number of iterations */
     bool    m_verbose{false};           /**< Verbose output */
 
-    // Algorithm parameters
+    // Some algorithm parameters
     Real m_epsilon{1e-8};    /**< Small constant to avoid numerical issues */
     Real m_sigma_max{0.5};   /**< Maximum value for the centering parameter */
     Real m_eta_max{0.25};    /**< Maximum value for the step size */
@@ -80,27 +83,12 @@ namespace IPsolver {
      * \param[in] lagrangian_hessian Hessian of the Lagrangian function handle.
      * \warning The default descent direction is set to BFGS (approximation of the Hessian).
      */
-    Solver(ObjectiveFunc objective, ObjectiveGradientFunc objective_gradient, ConstraintsFunc constraints,
-      ConstraintsJacobianFunc constraints_jacobian, LagrangianHessianFunc lagrangian_hessian)
-      : m_objective(std::move(objective)), m_objective_gradient(std::move(objective_gradient)),
-        m_constraints(std::move(constraints)), m_constraints_jacobian(std::move(constraints_jacobian)),
-        m_lagrangian_hessian(std::move(lagrangian_hessian)), m_descent(Descent::BFGS)
-    {
-      #define CMD "IPsolver::Solver::Solver(...): "
-
-      IPSOLVER_ASSERT(this->m_objective,
-        CMD "objective function must not be null");
-      IPSOLVER_ASSERT(this->m_objective_gradient,
-        CMD "gradient of the objective function must not be null");
-      IPSOLVER_ASSERT(this->m_constraints,
-        CMD "constraints function must not be null");
-      IPSOLVER_ASSERT(this->m_constraints_jacobian,
-        CMD "jacobian of the constraints function must not be null");
-      IPSOLVER_ASSERT(this->m_lagrangian_hessian,
-        CMD "lagrangian hessian function must not be null");
-
-      #undef CMD
-    }
+    Solver(ObjectiveFunc const &objective, ObjectiveGradientFunc const &objective_gradient,
+      ConstraintsFunc const &constraints, ConstraintsJacobianFunc const &constraints_jacobian,
+      LagrangianHessianFunc const &lagrangian_hessian)
+      : m_objective(objective), m_objective_gradient(objective_gradient),
+        m_constraints(constraints), m_constraints_jacobian(constraints_jacobian),
+        m_lagrangian_hessian(lagrangian_hessian), m_descent(Descent::BFGS) {}
 
     /**
      * \brief Constructor for the IPSolver class (with Hessian).
@@ -114,30 +102,13 @@ namespace IPsolver {
      * \param[in] lagrangian_hessian Hessian of the Lagrangian function handle.
      * \warning The default descent direction is set to Newton (exact Hessian).
      */
-    Solver(ObjectiveFunc objective, ObjectiveGradientFunc objective_gradient, ObjectiveHessianFunc objective_hessian,
-      ConstraintsFunc constraints, ConstraintsJacobianFunc constraints_jacobian, LagrangianHessianFunc lagrangian_hessian)
-      : m_objective(std::move(objective)), m_objective_gradient(std::move(objective_gradient)),
-        m_objective_hessian(std::move(objective_hessian)), m_constraints(std::move(constraints)),
-        m_constraints_jacobian(std::move(constraints_jacobian)), m_lagrangian_hessian(std::move(lagrangian_hessian)),
-        m_descent(Descent::NEWTON)
-    {
-      #define CMD "IPsolver::Solver::Solver(...): "
-
-      IPSOLVER_ASSERT(this->m_objective,
-        CMD "objective function must not be null");
-      IPSOLVER_ASSERT(this->m_objective_gradient,
-        CMD "gradient of the objective function must not be null");
-      IPSOLVER_ASSERT(this->m_objective_hessian,
-        CMD "hessian of the objective function must not be null");
-      IPSOLVER_ASSERT(this->m_constraints,
-        CMD "constraints function must not be null");
-      IPSOLVER_ASSERT(this->m_constraints_jacobian,
-        CMD "jacobian of the constraints function must not be null");
-      IPSOLVER_ASSERT(this->m_lagrangian_hessian,
-        CMD "lagrangian hessian function must not be null");
-
-      #undef CMD
-    }
+    Solver(ObjectiveFunc const &objective, ObjectiveGradientFunc const &objective_gradient,
+      ObjectiveHessianFunc const &objective_hessian, ConstraintsFunc const &constraints,
+      ConstraintsJacobianFunc const &constraints_jacobian, LagrangianHessianFunc const &lagrangian_hessian)
+      : m_objective(objective), m_objective_gradient(objective_gradient),
+        m_objective_hessian(objective_hessian), m_constraints(constraints),
+        m_constraints_jacobian(constraints_jacobian), m_lagrangian_hessian(lagrangian_hessian),
+        m_descent(Descent::NEWTON) {}
 
     /**
      * \brief Deleted copy constructor.
@@ -180,25 +151,106 @@ namespace IPsolver {
      * This method allows the user to specify the objective function to be minimized.
      * \param[in] objective The objective function to set.
      */
-    void objective(ObjectiveFunc objective) {
-      IPSOLVER_ASSERT(objective, "IPsolver::Solver::objective(...): objective function must not be null");
-      this->m_objective = std::move(objective);
+    void objective(ObjectiveFunc objective) {this->m_objective = objective;}
+
+    /**
+     * \brief Gets the current objective function.
+     * \return The current objective function.
+     */
+    ObjectiveFunc objective() const {return this->m_objective;}
+
+    /**
+     * \brief Sets the gradient of the objective function for the solver.
+     *
+     * This method allows the user to specify the gradient of the objective function.
+     * \param[in] objective_gradient The gradient of the objective function to set.
+     */
+    void objective_gradient(ObjectiveGradientFunc objective_gradient) {
+      this->m_objective_gradient = objective_gradient;
     }
+
+    /**
+     * \brief Gets the current gradient of the objective function.
+     * \return The current gradient of the objective function.
+     */
+    ObjectiveGradientFunc objective_gradient() const {return this->m_objective_gradient;}
+
+    /**
+     * \brief Sets the Hessian of the objective function for the solver.
+     *
+     * This method allows the user to specify the Hessian of the objective function.
+     * \param[in] objective_hessian The Hessian of the objective function to set.
+     */
+    void objective_hessian(ObjectiveHessianFunc objective_hessian) {
+      this->m_objective_hessian = objective_hessian;
+    }
+
+    /**
+     * \brief Gets the current Hessian of the objective function.
+     * \return The current Hessian of the objective function.
+     */
+    ObjectiveHessianFunc objective_hessian() const {return this->m_objective_hessian;}
+
+    /**
+     * \brief Sets the constraints function for the solver.
+     *
+     * This method allows the user to specify the constraints function.
+     * \param[in] constraints The constraints function to set.
+     */
+    void constraints(ConstraintsFunc constraints) {this->m_constraints = constraints;}
+
+    /**
+     * \brief Gets the current constraints function.
+     * \return The current constraints function.
+     */
+    ConstraintsFunc constraints() const {return this->m_constraints;}
+
+    /**
+     * \brief Sets the Jacobian of the constraints function for the solver.
+     *
+     * This method allows the user to specify the Jacobian of the constraints function.
+     * \param[in] constraints_jacobian The Jacobian of the constraints function to set.
+     */
+    void constraints_jacobian(ConstraintsJacobianFunc constraints_jacobian) {
+      this->m_constraints_jacobian = constraints_jacobian;
+    }
+
+    /**
+     * \brief Gets the current Jacobian of the constraints function.
+     * \return The current Jacobian of the constraints function.
+     */
+    ConstraintsJacobianFunc constraints_jacobian() const {return this->m_constraints_jacobian;}
+
+    /**
+     * \brief Sets the Hessian of the Lagrangian function for the solver.
+     *
+     * This method allows the user to specify the Hessian of the Lagrangian function.
+     * \param[in] lagrangian_hessian The Hessian of the Lagrangian function to set.
+     */
+    void lagrangian_hessian(LagrangianHessianFunc lagrangian_hessian) {
+      this->m_lagrangian_hessian = lagrangian_hessian;
+    }
+
+    /**
+     * \brief Gets the current Hessian of the Lagrangian function.
+     * \return The current Hessian of the Lagrangian function.
+     */
+    LagrangianHessianFunc lagrangian_hessian() const {return this->m_lagrangian_hessian;}
 
     /**
      * \brief Sets the descent direction for the solver.
      *
      * This method allows the user to specify whether to use the Newton method
      * or the BFGS method for computing the descent direction.
-     * \param[in] direction The descent direction to use.
+     * \param[in] descent The descent direction to use.
      */
-    void descent_direction(Descent direction) {this->m_descent = direction;}
+    void descent(Descent descent) {this->m_descent = descent;}
 
     /**
      * \brief Gets the current descent direction.
      * \return The current descent direction.
      */
-    Descent descent_direction() const {return this->m_descent;}
+    Descent descent() const {return this->m_descent;}
 
     /**
      * \brief Sets the maximum number of iterations for the solver.
@@ -210,7 +262,7 @@ namespace IPsolver {
      */
     void max_iterations(Integer max_iterations) {
       IPSOLVER_ASSERT(max_iterations > 0,
-        "IPsolver::Solver::max_iterations(...): max_iterations must be positive");
+        "IPsolver::Solver::max_iterations(...): input value must be positive");
       this->m_max_iterations = max_iterations;
     }
 
@@ -230,7 +282,7 @@ namespace IPsolver {
      */
     void tolerance(Real tolerance) {
       IPSOLVER_ASSERT(tolerance > 0.0,
-        "IPsolver::Solver::tolerance(...): tolerance must be positive");
+        "IPsolver::Solver::tolerance(...): input value must be positive");
       this->m_tolerance = tolerance;
     }
 
@@ -249,6 +301,135 @@ namespace IPsolver {
     bool verbose() const {return this->m_verbose;}
 
     /**
+     * \brief Sets the small constant epsilon to avoid numerical issues.
+     * \param[in] epsilon The small positive constant.
+     */
+    void epsilon(Real epsilon) {
+      IPSOLVER_ASSERT(epsilon > 0.0,
+        "IPsolver::Solver::epsilon(...): input value must be positive");
+      this->m_epsilon = epsilon;
+    }
+
+    /**
+     * \brief Gets the current epsilon value.
+     * \return The current epsilon value.
+     */
+    Real epsilon() const {return this->m_epsilon;}
+
+    /**
+     * \brief Sets the maximum value for the centering parameter sigma.
+     * \param[in] sigma_max The maximum value for sigma (must be positive).
+     */
+    void sigma_max(Real sigma_max) {
+      IPSOLVER_ASSERT(sigma_max > 0.0,
+        "IPsolver::Solver::sigma_max(...): input value must be positive");
+      this->m_sigma_max = sigma_max;
+    }
+
+    /**
+     * \brief Gets the current maximum value for sigma.
+     * \return The current sigma_max value.
+     */
+    Real sigma_max() const {return this->m_sigma_max;}
+
+    /**
+     * \brief Sets the maximum value for the step size eta.
+     * \param[in] eta_max The maximum value for eta (must be positive).
+     */
+    void eta_max(Real eta_max) {
+      IPSOLVER_ASSERT(eta_max > 0.0,
+        "IPsolver::Solver::eta_max(...): input value must be positive");
+      this->m_eta_max = eta_max;
+    }
+
+    /**
+     * \brief Gets the current maximum value for eta.
+     * \return The current eta_max value.
+     */
+    Real eta_max() const {return this->m_eta_max;}
+
+    /**
+     * \brief Sets the minimum value for the barrier parameter mu.
+     * \param[in] mu_min The minimum value for mu (must be positive).
+     */
+    void mu_min(Real mu_min) {
+      IPSOLVER_ASSERT(mu_min > 0.0,
+        "IPsolver::Solver::mu_min(...): input value must be positive");
+      this->m_mu_min = mu_min;
+    }
+
+    /**
+     * \brief Gets the current minimum value for mu.
+     * \return The current mu_min value.
+     */
+    Real mu_min() const {return this->m_mu_min;}
+
+    /**
+     * \brief Sets the maximum value for the line search parameter alpha.
+     * \param[in] alpha_max The maximum value for alpha (must be positive).
+     */
+    void alpha_max(Real alpha_max) {
+      IPSOLVER_ASSERT(alpha_max > 0.0,
+        "IPsolver::Solver::alpha_max(...): input value must be positive");
+      this->m_alpha_max = alpha_max;
+    }
+
+    /**
+     * \brief Gets the current maximum value for alpha.
+     * \return The current alpha_max value.
+     */
+    Real alpha_max() const {return this->m_alpha_max;}
+
+    /**
+     * \brief Sets the minimum value for the line search parameter alpha.
+     * \param[in] alpha_min The minimum value for alpha (must be positive).
+     */
+    void alpha_min(Real alpha_min) {
+      IPSOLVER_ASSERT(alpha_min > 0.0,
+        "IPsolver::Solver::alpha_min(...): input value must be positive");
+      this->m_alpha_min = alpha_min;
+    }
+
+    /**
+     * \brief Gets the current minimum value for alpha.
+     * \return The current alpha_min value.
+     */
+    Real alpha_min() const {return this->m_alpha_min;}
+
+    /**
+     * \brief Sets the value for the backtracking line search parameter beta.
+     * \param[in] beta The value for beta (must be positive).
+     */
+    void beta(Real beta) {
+      IPSOLVER_ASSERT(beta > 0.0,
+        "IPsolver::Solver::beta(...): input value must be positive");
+      this->m_beta = beta;
+    }
+
+    /**
+     * \brief Gets the current value for beta.
+     * \return The current beta value.
+     */
+    Real beta() const {return this->m_beta;}
+
+    /**
+     * \brief Sets the parameter for the sufficient decrease condition tau.
+     * \param[in] tau The value for tau (must be positive).
+     */
+    void tau(Real tau) {
+      IPSOLVER_ASSERT(tau > 0.0,
+        "IPsolver::Solver::tau(...): input value must be positive");
+      this->m_tau = tau;
+    }
+
+    /**
+     * \brief Gets the current value for tau.
+     * \return The current tau value.
+     */
+    Real tau() const {return this->m_tau;}
+
+
+    /**
      * \brief Solves the optimization problem using the interior-point method.
      *
      * This method implements the interior-point algorithm to solve the optimization problem defined
@@ -258,107 +439,139 @@ namespace IPsolver {
      */
     Vector solve(const Vector& x_guess)
     {
+      #define CMD "IPsolver::Solver::solve(...): "
+
+      IPSOLVER_ASSERT(this->m_objective,
+        CMD "objective function must not be null");
+      IPSOLVER_ASSERT(this->m_objective_gradient,
+        CMD "gradient of the objective function must not be null");
+      IPSOLVER_ASSERT(this->m_objective_hessian || this->m_descent != Descent::NEWTON,
+        CMD "hessian of the objective function must not be null");
+      IPSOLVER_ASSERT(this->m_constraints,
+        CMD "constraints function must not be null");
+      IPSOLVER_ASSERT(this->m_constraints_jacobian,
+        CMD "jacobian of the constraints function must not be null");
+      IPSOLVER_ASSERT(this->m_lagrangian_hessian,
+        CMD "lagrangian hessian function must not be null");
+
+      // INITIALIZATION
+      // Get the number of primal variables (n), the number of constraints (m), the total number of
+      // primal-dual optimization variables (nv), and initialize the Lagrange multipliers and the
+      // second-order information
       Vector x(x_guess);
       Vector c(this->m_constraints(x));
-      Matrix J, W;
       Integer n{static_cast<Integer>(x.size())};
       Integer m{static_cast<Integer>(c.size())};
       Integer nv{n + m};
-
       Vector z(Vector::Ones(m));
       Matrix B(Matrix::Identity(n, n));
 
-      Vector g_old;
-      Vector p_x;
-
+      Vector g_old, p_x, p_z;
       if (this->m_verbose) {
         std::cout << "i, f(x), lg(mu), sigma, ||r_x||, ||r_c||, alpha, #ls" << std::endl;
       }
 
+      // Repeat while the convergence criterion has not been satisfied, and we haven't reached the
+      // maximum number of iterations
       Real alpha{0.0};
       Integer ls{0};
-
       for (Integer iter{0}; iter < m_max_iterations; ++iter) {
+
+        // COMPUTE OBJECTIVE, GRADIENT, CONSTRAINTS, ETC
+        // Compute the response of the objective function, the gradient of the objective, the
+        // response of the inequality constraints, the Jacobian of the inequality constraints, the
+        // Hessian of the Lagrangian (minus the Hessian of the objective) and, optionally, the
+        // Hessian of the objective.
         Real f{this->m_objective(x)};
         c = this->m_constraints(x);
-        J = this->m_constraints_jacobian(x, z);
-        W = this->m_lagrangian_hessian(x, z);
-
-        Vector g;
+        Vector g(this->m_objective_gradient(x));
+        Matrix J(this->m_constraints_jacobian(x, z));
+        Matrix W(this->m_lagrangian_hessian(x, z));
         if (this->m_descent == Descent::NEWTON) {
-          g = this->m_objective_gradient(x);
           B = this->m_objective_hessian(x);
-        } else {
-          g = this->m_objective_gradient(x);
         }
 
-        Vector r_x{g + J.transpose() * z};
-        Vector r_c{c.array() * z.array()};
+        // Compute the responses of the unperturbed Karush-Kuhn-Tucker optimality conditions.
+        Vector r_x{g + J.transpose() * z}; // Dual residual
+        Vector r_c{c.array() * z.array()}; // Complementarity
         Vector r_0(nv);
         r_0 << r_x, r_c;
 
+        // Set some parameters that affect convergence of the primal-dual interior-point method
         Real norm_r0{static_cast<Real>(r_0.norm())};
-
-        Real eta{std::min(this->m_eta_max, norm_r0 / nv)};
-        Real sigma{std::min(this->m_sigma_max, std::sqrt(norm_r0 / nv))};
+        Real eta{std::min<Real>(this->m_eta_max, norm_r0 / nv)};
+        Real sigma{std::min<Real>(this->m_sigma_max, std::sqrt(norm_r0 / nv))};
         Real duality_gap{static_cast<Real>(-c.dot(z))};
-        Real mu{std::max(this->m_mu_min, sigma * duality_gap / m)};
+        Real mu{std::max<Real>(this->m_mu_min, sigma * duality_gap / m)};
 
+        // Print the status of the algorithm
         if (this->m_verbose) {
           std::cout << iter+1 << ", " << f << ", " << std::log10(mu) << ", " << sigma << ", "
             << r_x.norm() << ", " << r_c.norm() << ", " << alpha << ", " << ls << std::endl;
         }
 
+        // CONVERGENCE CHECK
+        // If the norm of the responses is less than the specified tolerance, we are done
         if (norm_r0 / nv < this->m_tolerance) {break;}
 
-        if (this->m_descent == Descent::BFGS && iter > 1) {
-          Vector y(g - g_old);
-          B = this->bfgs_update(B, alpha * p_x, y);
+        // Update the BFGS approximation to the Hessian of the objective
+        if (this->m_descent == Descent::BFGS && iter > 0) {
+          B = this->bfgs_update(B, alpha * p_x, g - g_old);
         }
 
+        // SOLUTION TO PERTURBED KKT SYSTEM
+        // Compute the search direction of x and z
         Vector c_epsilon(c.array() - this->m_epsilon);
-        Matrix S(z.array() / c_epsilon.array());
-        Matrix S_diag(S.asDiagonal());
-
+        Matrix S((z.array() / c_epsilon.array()).matrix().asDiagonal());
         Vector g_b(g - mu * J.transpose() * (1.0 / c_epsilon.array()).matrix());
-
-        // Solve (B + W - J' * S * J) * px = -gb
-        Matrix H(B + W - J.transpose() * S_diag * J);
+        Matrix H(B + W - J.transpose() * S * J);
         p_x = H.ldlt().solve(-g_b);
+        p_z = -(z + mu * (1.0 / c_epsilon.array()).matrix() + S * J * p_x);
 
-        Vector p_z(-(z + mu * (1.0 / c_epsilon.array()).matrix() + S_diag * J * p_x));
-
+        // BACKTRACKING LINE SEARCH
+        // To ensure global convergence, execute backtracking line search to determine the step length
+        // First, we have to find the largest step size which ensures that z remains feasible
+        // Next, we perform backtracking line search
         alpha = this->m_alpha_max;
-        for (Integer i{0}; i < m; ++i) {
-          if (p_z[i] < 0) {alpha = std::min<Real>(alpha, this->m_alpha_max * (z[i] / (-p_z[i])));}
+        Mask mask((z + p_z).array() < 0.0);
+        if (mask.any()) {
+          Array ratio(z.array() / (-p_z.array()));
+          alpha = this->m_alpha_max * std::min<Real>(1.0, mask.select(ratio, 1.0).minCoeff());
         }
 
-        Real psi{this->merit(z, f, c, mu)};
-        Real dpsi{this->grad_merit(z, p_x, p_z, g, c, J, mu)};
+        // Compute the response of the merit function and the directional gradient at the current
+        // point and search direction
+        Real psi{this->merit(x, z, f, c, mu)};
+        Real dpsi{this->grad_merit(x, z, p_x, p_z, g, c, J, mu)};
         ls = 0;
-
         while (true) {
-          ls++;
+
+          // Compute the candidate point, the constraints, and the response of the objective function
+          // and merit function at the candidate point
+          ++ls;
           Vector x_new(x + alpha * p_x);
           Vector z_new(z + alpha * p_z);
-          Real f_new{this->m_objective(x_new)};
-          Vector c_new(this->m_constraints(x_new));
-          Real psi_new{this->merit(z_new, f_new, c_new, mu)};
+          f = this->m_objective(x_new);
+          c = this->m_constraints(x_new);
+          Real psi_new{this->merit(x_new, z_new, f, c, mu)};
 
-          bool allFeasible{(c_new.array() <= 0.0).all()};
-          if (allFeasible && psi_new < psi + this->m_tau * eta * alpha * dpsi) {
+          // Stop backtracking search if we've found a candidate point that sufficiently decreases
+          // the merit function and satisfies all the constraints
+          if ((c.array() <= 0.0).all() && psi_new < psi + this->m_tau * eta * alpha * dpsi) {
             x = x_new;
             z = z_new;
             g_old = g;
             break;
           }
+
+          // The candidate point does not meet our criteria, so decrease the step size for 0 < β < 1.
           alpha *= this->m_beta;
-          if (alpha < this->m_alpha_min) {
-            IPSOLVER_ERROR("IPsolver::Solver::solve(...): line search step size too small");
-          }
+          IPSOLVER_ASSERT(alpha > this->m_alpha_min, CMD "line search step size too small");
         }
       }
       return x;
+
+      #undef CMD
     }
 
 private:
@@ -371,13 +584,14 @@ private:
      *    -\mu \sum\log(\mathbf{c}^2 \mathbf{z} + \epsilon)
      * \f]
      * It is used to evaluate the quality of the current solution in terms of both the objective function and the constraints.
+     * \param[in] x Primal variable vector.
      * \param[in] z Dual variable vector.
      * \param[in] f Objective function value at x.
      * \param[in] c Constraints vector at x.
      * \param[in] mu Barrier parameter.
      * \return The computed merit value.
      */
-    Real merit(const Vector& z, Real f, const Vector& c, Real mu)
+    Real merit([[maybe_unused]] const Vector& x, const Vector& z, Real f, const Vector& c, Real mu)
     {
       return f - c.dot(z) - mu * ((c.array().square() * z.array() + this->m_epsilon).log().sum());
     }
@@ -387,6 +601,7 @@ private:
      *
      * This function computes the directional derivative of the merit function with respect to the
      * primal and dual variables.
+     * \param[in] x Primal variable vector.
      * \param[in] z Dual variable vector.
      * \param[in] p_x Directional derivative of the primal variable.
      * \param[in] p_z Directional derivative of the dual variable.
@@ -396,12 +611,14 @@ private:
      * \param[in] mu Barrier parameter.
      * \return The computed directional derivative of the merit function.
      */
-    Real grad_merit(const Vector& z, const Vector& p_x, const Vector& p_z, const Vector& g, const Vector& c,
-      const Matrix& J, Real mu)
+    Real grad_merit([[maybe_unused]] const Vector& x, const Vector& z, const Vector& p_x,
+      const Vector& p_z, const Vector& g, const Vector& c, const Matrix& J, Real mu)
     {
-      Vector term1(g - J.transpose() * z - 2.0 * mu * J.transpose() * (1.0 / (c.array() - this->m_epsilon)).matrix());
-      Vector term2(c + mu * (1.0 / (z.array() + this->m_epsilon)).matrix());
-      return p_x.dot(term1) - p_z.dot(term2);
+      return p_x.dot(
+          g - J.transpose() * z - 2.0 * mu * J.transpose() * (1.0 / (c.array() - this->m_epsilon)).matrix()
+        ) - p_z.dot(
+          c + mu * (1.0 / (z.array() + this->m_epsilon)).matrix()
+        );
     }
 
     /**
@@ -424,9 +641,11 @@ private:
      */
     Matrix bfgs_update(const Matrix& B, const Vector& s, const Vector& y)
     {
-      if (y.dot(s) <= 0) {IPSOLVER_ERROR("BFGS update condition yᵀs > 0 not satisfied");}
-      Vector Bs(B * s);
-      return B - (Bs * Bs.transpose()) / (s.dot(Bs)) + (y * y.transpose()) / (y.dot(s));
+      #define CMD "IPsolver::Solver::bfgs_update(...): "
+      IPSOLVER_ASSERT(y.dot(s) > 0.0, CMD "update condition yᵀs > 0 not satisfied");
+      Vector x(B * s);
+      return B - (x * x.transpose()) / (s.dot(x)) + (y * y.transpose()) / (y.dot(s));
+      #undef CMD
     }
 
   }; // class IPSolver

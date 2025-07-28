@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['objectivefunc_0',['ObjectiveFunc',['../class_i_psolver_1_1_solver.html#a953ad1877e476e3ef85ea499079072dc',1,'IPsolver::Solver']]],
-  ['objectivegradientfunc_1',['ObjectiveGradientFunc',['../class_i_psolver_1_1_solver.html#a0b48ad9349f8eafd79df10e4fb3ca3ec',1,'IPsolver::Solver']]],
-  ['objectivehessianfunc_2',['ObjectiveHessianFunc',['../class_i_psolver_1_1_solver.html#afe8bcadd99d428b5ecb3f1cf2f8c300a',1,'IPsolver::Solver']]]
+  ['mask_0',['Mask',['../class_i_psolver_1_1_solver.html#a6df8f1b1314fc5ad543f9dd73ce7ac08',1,'IPsolver::Solver']]],
+  ['matrix_1',['Matrix',['../class_i_psolver_1_1_solver.html#ab10e75668dbe4559dfd3e736f75dab68',1,'IPsolver::Solver']]]
 ];

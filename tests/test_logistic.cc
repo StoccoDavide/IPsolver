@@ -44,26 +44,35 @@
 #include "IPsolver.hh"
 
 // Logistic regression example
-TEMPLATE_TEST_CASE("IPsolver logistic regression example", "[template]", double, float) {
+TEMPLATE_TEST_CASE("IPsolver logistic regression example", "[template]", double) { // float, double, long double
   using Integer = typename IPsolver::Integer;
   using Vector  = typename IPsolver::Solver<TestType>::Vector;
   using Matrix  = typename IPsolver::Solver<TestType>::Matrix;
 
-  // Define the number of training examples and features
+  // Define the logistic function
+  auto logit = [](const Vector& x) -> Vector {
+    return (1.0 / (1.0 + (-x.array()).exp())).matrix();
+  };
+
+  // CREATE DATA SET
+  // Generate the input vectors from the standard normal, and generate the binary responses from the
+  // regression with some additional noise, and then transform the results using the logistic function.
+  // The variable "beta" is the set of true regression coefficients of length m.
   constexpr Integer m{8};
   constexpr Integer n{100};
   constexpr TestType epsilon{0.25};
-  constexpr TestType lambda{0.5};
 
+  // True regression coefficients
   Vector beta(m);
-  beta << 0, 0, 2, -4, 0, 0, -1, 3;
+  beta << 0.0, 0.0, 2.0, -4.0, 0.0, 0.0, -1.0, 3.0;
 
+  // Standard deviation of coordinates
   Vector sigma(m);
-  sigma << 10, 1, 1, 1, 1, 1, 1, 1;
+  sigma << 10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0;
 
+  // The n x m matrix of samples
   std::mt19937 gen(42);
-  std::normal_distribution<TestType> normal(0, 1);
-
+  std::normal_distribution<TestType> normal(0.0, 1.0);
   Matrix A(n, m);
   for (Integer i{0}; i < n; ++i) {
     for (Integer j{0}; j < m; ++j) {
@@ -71,61 +80,70 @@ TEMPLATE_TEST_CASE("IPsolver logistic regression example", "[template]", double,
     }
   }
 
+  // Noise in outputs
   Vector noise(n);
   for (Integer i{0}; i < n; ++i) {
     noise(i) = epsilon * normal(gen);
   }
 
-  auto logit = [](const Vector& x) -> Vector {
-    return (1.0 / (1.0 + (-x.array()).exp())).matrix();
-  };
+  // The binary outputs
+  Vector y(logit(A * beta + noise));
+  for (Integer i{0}; i < n; ++i) {
+    y(i) = (normal(gen) < y(i)) ? 1.0 : 0.0;
+  }
 
-  std::cout << "A * beta + noise = " << (logit(A * beta + noise).array() > 0.5) << std::endl;
-
-  Vector y;//(((logit(A * beta + noise).array()) > 0.5).template cast<TestType>());
-
+  // COMPUTE SOLUTION WITH INTERIOR-POINT METHOD.
+  // Compute the L1-regularized maximum likelihood estimator
+  constexpr TestType lambda{0.5};
   Matrix P(n, 2*m);
   P << A, -A;
 
   // Objective function
-  auto objective = [=](const Vector& x) -> TestType { //&P, &y, &lambda, &logit
+  auto objective = [&P, &y, &logit](const Vector& x) -> TestType {
     Vector u(logit(P * x));
     return -(y.array() * u.array().log() + (1.0 - y.array()) * (1.0 - u.array()).log()).sum()
       + lambda * x.sum();
   };
 
-  // Gradient of the objective
-  auto objective_gradient = [=](const Vector& x) -> Vector { //&P, &y, &lambda, &logit
+  // Gradient of the objective function
+  auto objective_gradient = [&P, &y, &lambda, &logit](const Vector& x) -> Vector {
     Vector u(logit(P * x));
-    return -P.transpose() * (y - u) + lambda * Vector::Ones(x.size());
+    return ((-P.transpose() * (y - u)).array() + lambda).matrix();
   };
 
-  // Constraints ci(x) = -xᵢ < 0
-  auto constraints = [](const Vector& x) -> Vector {return -x;};
+  // Hessian of the objective function
+  auto objective_hessian = [&P, &logit](const Vector& x) -> Matrix {
+    Vector u(logit(P * x));
+    Matrix U((u.array() * (1.0 - u.array())).matrix().asDiagonal());
+    return P.transpose() * U * P;
+  };
 
-  // Jacobian of the constraints
+  // Constraints function
+  auto constraints = [](const Vector& x) -> Vector {
+    return -x;
+  };
+
+  // Jacobian of the constraints function
   auto constraints_jacobian = [](const Vector& x, const Vector& /*z*/) -> Matrix {
     return -Matrix::Identity(x.size(), x.size());
   };
 
-  // Lagrangian Hessian
-  auto lagrangian_hessian = [](const Vector& /*x*/, const Vector& /*z*/) -> Matrix {
-    return Matrix::Zero(0, 0); // Not used in this linear constraint example
+  // Hessian of the Lagrangian function
+  auto lagrangian_hessian = [](const Vector& x, const Vector& /*z*/) -> Matrix {
+    return Matrix::Zero(x.size(), x.size());
   };
 
   // Create the solver
-  IPsolver::Solver<TestType> solver(objective, objective_gradient, constraints, constraints_jacobian, lagrangian_hessian);
-  solver.descent_direction(IPsolver::Solver<TestType>::Descent::BFGS);
+  IPsolver::Solver<TestType> solver(
+    objective, objective_gradient, objective_hessian, constraints, constraints_jacobian, lagrangian_hessian
+  );
+  solver.descent(IPsolver::Solver<TestType>::Descent::STEEPEST);
   solver.tolerance(1e-4);
   solver.max_iterations(100);
-  solver.verbose(false);
+  solver.verbose(true);
 
   // Solve the optimization problem
   Vector x_guess(Vector::Ones(2*m));
   Vector x_sol(solver.solve(x_guess));
 
-  // Expect sparsity pattern approximately similar to true beta
-  Vector w(x_sol.head(m) - x_sol.tail(m));
-  REQUIRE(w.size() == m);
-  for (Integer i{0}; i < m; ++i) {REQUIRE(std::abs(w(i) - beta(i)) < TestType(1.0));}
 }

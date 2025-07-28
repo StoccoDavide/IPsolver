@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['matrix_0',['Matrix',['../class_i_psolver_1_1_solver.html#ab10e75668dbe4559dfd3e736f75dab68',1,'IPsolver::Solver']]]
+  ['lagrangianhessianfunc_0',['LagrangianHessianFunc',['../class_i_psolver_1_1_solver.html#ada8d6ea58187e1c7ceb151c13cb9eb94',1,'IPsolver::Solver']]]
 ];

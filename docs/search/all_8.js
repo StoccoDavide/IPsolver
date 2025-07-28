@@ -1,8 +1,27 @@
 var searchData=
 [
-  ['objective_0',['objective',['../class_i_psolver_1_1_solver.html#a2d73a9b8b5410327a2510cbb2329d298',1,'IPsolver::Solver']]],
-  ['objectivefunc_1',['ObjectiveFunc',['../class_i_psolver_1_1_solver.html#a953ad1877e476e3ef85ea499079072dc',1,'IPsolver::Solver']]],
-  ['objectivegradientfunc_2',['ObjectiveGradientFunc',['../class_i_psolver_1_1_solver.html#a0b48ad9349f8eafd79df10e4fb3ca3ec',1,'IPsolver::Solver']]],
-  ['objectivehessianfunc_3',['ObjectiveHessianFunc',['../class_i_psolver_1_1_solver.html#afe8bcadd99d428b5ecb3f1cf2f8c300a',1,'IPsolver::Solver']]],
-  ['operator_3d_4',['operator=',['../class_i_psolver_1_1_solver.html#a6664e8fcf4fd1b96d022590a9a05ecee',1,'IPsolver::Solver::operator=(const Solver &amp;)=delete'],['../class_i_psolver_1_1_solver.html#a8b08c0820f6c840be1515301c54af99a',1,'IPsolver::Solver::operator=(Solver &amp;&amp;)=delete']]]
+  ['m_5falpha_5fmax_0',['m_alpha_max',['../class_i_psolver_1_1_solver.html#ae53e3e1cb2c7146c2d5c3be517d1a184',1,'IPsolver::Solver']]],
+  ['m_5falpha_5fmin_1',['m_alpha_min',['../class_i_psolver_1_1_solver.html#ab0556c69016f6e915169348c3d5a831c',1,'IPsolver::Solver']]],
+  ['m_5fbeta_2',['m_beta',['../class_i_psolver_1_1_solver.html#a4a8ade4872453d7573c824c4068a48ba',1,'IPsolver::Solver']]],
+  ['m_5fconstraints_3',['m_constraints',['../class_i_psolver_1_1_solver.html#af1f92977f76265e570660fa69777d02c',1,'IPsolver::Solver']]],
+  ['m_5fconstraints_5fjacobian_4',['m_constraints_jacobian',['../class_i_psolver_1_1_solver.html#ab7c7de175c89fc23b542ce4a48c974ad',1,'IPsolver::Solver']]],
+  ['m_5fdescent_5',['m_descent',['../class_i_psolver_1_1_solver.html#acbad3d62e60d4771986babe26f92eb8a',1,'IPsolver::Solver']]],
+  ['m_5fepsilon_6',['m_epsilon',['../class_i_psolver_1_1_solver.html#aa9a3e8682f0587716c7cb11996e4a399',1,'IPsolver::Solver']]],
+  ['m_5feta_5fmax_7',['m_eta_max',['../class_i_psolver_1_1_solver.html#aa27b5f17117038c193dc7b9a9132eedc',1,'IPsolver::Solver']]],
+  ['m_5flagrangian_5fhessian_8',['m_lagrangian_hessian',['../class_i_psolver_1_1_solver.html#a3569241702f64a2837d0a1821aaeee89',1,'IPsolver::Solver']]],
+  ['m_5fmax_5fiterations_9',['m_max_iterations',['../class_i_psolver_1_1_solver.html#a8b98a9854bd7b032b6ad897028308145',1,'IPsolver::Solver']]],
+  ['m_5fmu_5fmin_10',['m_mu_min',['../class_i_psolver_1_1_solver.html#adb90bdd3ba0eba4fdf7450e0212530f1',1,'IPsolver::Solver']]],
+  ['m_5fobjective_11',['m_objective',['../class_i_psolver_1_1_solver.html#ac87601dcd973f07e41f571606e831c3e',1,'IPsolver::Solver']]],
+  ['m_5fobjective_5fgradient_12',['m_objective_gradient',['../class_i_psolver_1_1_solver.html#a9d432742823dae3e653631f5f999f67e',1,'IPsolver::Solver']]],
+  ['m_5fobjective_5fhessian_13',['m_objective_hessian',['../class_i_psolver_1_1_solver.html#adb4457f0808bd99899912becb7209fb2',1,'IPsolver::Solver']]],
+  ['m_5fsigma_5fmax_14',['m_sigma_max',['../class_i_psolver_1_1_solver.html#aa10f5876aeb017cd253f38c2f2af36f8',1,'IPsolver::Solver']]],
+  ['m_5ftau_15',['m_tau',['../class_i_psolver_1_1_solver.html#acf07c94c1b136ceba58616a082ce9a31',1,'IPsolver::Solver']]],
+  ['m_5ftolerance_16',['m_tolerance',['../class_i_psolver_1_1_solver.html#a3f1c286843f17a46c0ea003735248516',1,'IPsolver::Solver']]],
+  ['m_5fverbose_17',['m_verbose',['../class_i_psolver_1_1_solver.html#a9c5443ce4cbbd29ae4187ba4663b096a',1,'IPsolver::Solver']]],
+  ['mainpage_2emd_18',['Mainpage.md',['../_mainpage_8md.html',1,'']]],
+  ['mask_19',['Mask',['../class_i_psolver_1_1_solver.html#a6df8f1b1314fc5ad543f9dd73ce7ac08',1,'IPsolver::Solver']]],
+  ['matrix_20',['Matrix',['../class_i_psolver_1_1_solver.html#ab10e75668dbe4559dfd3e736f75dab68',1,'IPsolver::Solver']]],
+  ['max_5fiterations_21',['max_iterations',['../class_i_psolver_1_1_solver.html#ad845c2d228c5e730d7a801f5b3e3d453',1,'IPsolver::Solver::max_iterations(Integer max_iterations)'],['../class_i_psolver_1_1_solver.html#ae6a4afc78765c5e1d71ede8a31f64c17',1,'IPsolver::Solver::max_iterations() const']]],
+  ['merit_22',['merit',['../class_i_psolver_1_1_solver.html#ad9480de5dcf5960835cdcc930aa21b7d',1,'IPsolver::Solver']]],
+  ['mu_5fmin_23',['mu_min',['../class_i_psolver_1_1_solver.html#a4363575682ba5cb7d86dfc65e2c872e6',1,'IPsolver::Solver::mu_min(Real mu_min)'],['../class_i_psolver_1_1_solver.html#a176452502fd956d236fe63bcf4d2f96c',1,'IPsolver::Solver::mu_min() const']]]
 ];

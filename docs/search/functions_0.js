@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['bfgs_5fupdate_0',['bfgs_update',['../class_i_psolver_1_1_solver.html#aeb95e4e50a6d998cb75811e89b3debb5',1,'IPsolver::Solver']]]
+  ['alpha_5fmax_0',['alpha_max',['../class_i_psolver_1_1_solver.html#ac75cfe4852c98df73e842dbd12162fa0',1,'IPsolver::Solver::alpha_max(Real alpha_max)'],['../class_i_psolver_1_1_solver.html#a9d54f04063029468ae7cacce71666da0',1,'IPsolver::Solver::alpha_max() const']]],
+  ['alpha_5fmin_1',['alpha_min',['../class_i_psolver_1_1_solver.html#ace80c66ca627420774ed1635a5d3aa04',1,'IPsolver::Solver::alpha_min(Real alpha_min)'],['../class_i_psolver_1_1_solver.html#ac81a2d15157c160ff9afaebaf66351b9',1,'IPsolver::Solver::alpha_min() const']]]
 ];
