@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['solver_0',['Solver',['../class_i_psolver_1_1_solver.html',1,'IPsolver']]]
+  ['problem_0',['Problem',['../class_i_psolver_1_1_problem.html',1,'IPsolver']]],
+  ['problemwrapper_1',['ProblemWrapper',['../class_i_psolver_1_1_problem_wrapper.html',1,'IPsolver']]]
 ];

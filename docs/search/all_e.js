@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7esolver_0',['~Solver',['../class_i_psolver_1_1_solver.html#a3382169f83b99fdfcec13da2b486d8ef',1,'IPsolver::Solver']]]
+  ['uniqueptr_0',['UniquePtr',['../class_i_psolver_1_1_solver.html#a5168729763676556dd3db98c64e34b82',1,'IPsolver::Solver']]]
 ];

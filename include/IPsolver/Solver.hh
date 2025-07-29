@@ -13,12 +13,39 @@
 #ifndef INCLUDE_IPSOLVER_SOLVER_HH
 #define INCLUDE_IPSOLVER_SOLVER_HH
 
-#include <Eigen/Dense>
+// Standard libraries
 #include <iostream>
+#include <iomanip>
 #include <algorithm>
+
+// Eigen library
+#include <Eigen/Dense>
+
+// IPsolver includes
+#include "IPsolver/Problem.hh"
 
 namespace IPsolver {
 
+  /**
+   * \brief Solver class for the IPsolver library
+   *
+   * The Solver class provides an interface for solving convex optimization problems using
+   * interior-point methods.
+   *
+   * The solver can handle problems of the form:
+   * \f[
+   *  \begin{array}{l}
+   *    \text{minimize} ~ f(\mathbf{x}) \\
+   *    \text{subject to} ~ \mathbf{c}(\mathbf{x}) < \mathbf{0}
+   *  \end{array}
+   * \f]
+   * where \f$\mathbf{x} \in \mathbb{R}^n\f$ is the vector of optimization variables, \f$f: \mathbb{R}^n
+   * \to \mathbb{R}\f$ is the convex objective function, and \f$\mathbf{c}: \mathbb{R}^n \to \mathbb{R}^m\f$
+   * is the vector of convex inequality constraints.
+   *
+   * The solver supports different descent methods, including Newton's method, BFGS and steepest
+   * descent. The user can specify the desired method through the `descent` method.
+   */
   template<typename Real>
   class Solver
   {
@@ -29,30 +56,24 @@ namespace IPsolver {
       STEEPEST = 2  /**< Use steepest descent method for descent direction */
     }; /**< Descent direction enumeration */
 
-    using Vector = Eigen::VectorXd; /**< Vector type (Eigen dense dynamic matrix) */
-    using Matrix = Eigen::MatrixXd; /**< Matrix type (Eigen dense dynamic matrix) */
-    using Array  = Eigen::ArrayXd;  /**< Array type (Eigen dense dynamic array) */
-    using Mask = Eigen::Array<bool, Eigen::Dynamic, 1>; /**< Mask type for Eigen arrays */
+    using UniquePtr = std::unique_ptr<Problem<Real>>; /**< Unique pointer to a Problem object */
 
-    using ObjectiveFunc           = std::function<Real(const Vector&)>;   /**< Objective function type */
-    using ObjectiveGradientFunc   = std::function<Vector(const Vector&)>; /**< Gradient function type */
-    using ObjectiveHessianFunc    = std::function<Matrix(const Vector&)>; /**< Hessian function type */
-    using ConstraintsFunc         = std::function<Vector(const Vector&)>; /**< Constraints function type */
-    using ConstraintsJacobianFunc  = std::function<Matrix(const Vector&, const Vector&)>; /**< Jacobian function type */
-    using LagrangianHessianFunc   = std::function<Matrix(const Vector&, const Vector&)>; /**< Hessian of the Lagrangian function type */
+    using Vector = typename Problem<Real>::Vector;
+    using Matrix = typename Problem<Real>::Matrix;
+
+    using ObjectiveFunc           = typename ProblemWrapper<Real>::ObjectiveFunc;
+    using ObjectiveGradientFunc   = typename ProblemWrapper<Real>::ObjectiveGradientFunc;
+    using ObjectiveHessianFunc    = typename ProblemWrapper<Real>::ObjectiveHessianFunc;
+    using ConstraintsFunc         = typename ProblemWrapper<Real>::ConstraintsFunc;
+    using ConstraintsJacobianFunc = typename ProblemWrapper<Real>::ConstraintsJacobianFunc;
+    using LagrangianHessianFunc   = typename ProblemWrapper<Real>::LagrangianHessianFunc;
 
   private:
-    ObjectiveFunc           m_objective{nullptr};            /**< Objective function \f$ f(\mathbf{x}) \f$ */
-    ObjectiveGradientFunc   m_objective_gradient{nullptr};   /**< Gradient of the objective function \f$ \nabla f(\mathbf{x}) \f$ */
-    ObjectiveHessianFunc    m_objective_hessian{nullptr};    /**< Hessian of the objective function \f$ \nabla^2 f(\mathbf{x}) \f$ */
-    ConstraintsFunc         m_constraints{nullptr};          /**< Constraints function \f$ g(\mathbf{x}) \f$ */
-    ConstraintsJacobianFunc m_constraints_jacobian{nullptr}; /**< Jacobian of the constraints \f$ J(\mathbf{x}) \f$ */
-    LagrangianHessianFunc   m_lagrangian_hessian{nullptr};  /**< Hessian of the Lagrangian \f$ W(\mathbf{x}, \mathbf{z}) \f$ */
+    std::unique_ptr<Problem<Real>> m_problem; /**< Problem object */
 
     Descent m_descent{Descent::NEWTON}; /**< Descent direction method */
     Real    m_tolerance{1e-6};          /**< Tolerance for convergence */
     Integer m_max_iterations{100};      /**< Maximum number of iterations */
-    bool    m_verbose{false};           /**< Verbose output */
 
     // Some algorithm parameters
     Real m_epsilon{1e-8};    /**< Small constant to avoid numerical issues */
@@ -86,9 +107,8 @@ namespace IPsolver {
     Solver(ObjectiveFunc const &objective, ObjectiveGradientFunc const &objective_gradient,
       ConstraintsFunc const &constraints, ConstraintsJacobianFunc const &constraints_jacobian,
       LagrangianHessianFunc const &lagrangian_hessian)
-      : m_objective(objective), m_objective_gradient(objective_gradient),
-        m_constraints(constraints), m_constraints_jacobian(constraints_jacobian),
-        m_lagrangian_hessian(lagrangian_hessian), m_descent(Descent::BFGS) {}
+      : m_problem(std::make_unique<ProblemWrapper<Real>>(objective, objective_gradient,
+          constraints, constraints_jacobian, lagrangian_hessian)), m_descent(Descent::BFGS) {}
 
     /**
      * \brief Constructor for the IPSolver class (with Hessian).
@@ -105,10 +125,19 @@ namespace IPsolver {
     Solver(ObjectiveFunc const &objective, ObjectiveGradientFunc const &objective_gradient,
       ObjectiveHessianFunc const &objective_hessian, ConstraintsFunc const &constraints,
       ConstraintsJacobianFunc const &constraints_jacobian, LagrangianHessianFunc const &lagrangian_hessian)
-      : m_objective(objective), m_objective_gradient(objective_gradient),
-        m_objective_hessian(objective_hessian), m_constraints(constraints),
-        m_constraints_jacobian(constraints_jacobian), m_lagrangian_hessian(lagrangian_hessian),
-        m_descent(Descent::NEWTON) {}
+      : m_problem(std::make_unique<ProblemWrapper<Real>>(objective, objective_gradient, objective_hessian,
+          constraints, constraints_jacobian, lagrangian_hessian)), m_descent(Descent::NEWTON) {}
+
+    /**
+     * \brief Constructor for the IPSolver class (with a unique pointer to a Problem object).
+     *
+     * Initializes the solver with the provided unique pointer to a Problem object.
+     * \param[in] problem The unique pointer to the Problem object to use.
+     * \param[in] descent The descent direction method to use (default is Newton).
+     * \warning The pointer is moved into the solver, so it should not be used after this call.
+     */
+    Solver(std::unique_ptr<Problem<Real>> &&problem, Descent descent = Descent::NEWTON)
+      : m_problem(std::move(problem)), m_descent(descent) {}
 
     /**
      * \brief Deleted copy constructor.
@@ -146,111 +175,69 @@ namespace IPsolver {
     ~Solver() = default;
 
     /**
-     * \brief Sets the objective function for the solver.
+     * \brief Sets the problem to be solved.
      *
-     * This method allows the user to specify the objective function to be minimized.
-     * \param[in] objective The objective function to set.
+     * This method allows the user to specify the problem to be solved.
+     * \param[in] problem The problem to set.
      */
-    void objective(ObjectiveFunc objective) {this->m_objective = objective;}
-
-    /**
-     * \brief Gets the current objective function.
-     * \return The current objective function.
-     */
-    ObjectiveFunc objective() const {return this->m_objective;}
-
-    /**
-     * \brief Sets the gradient of the objective function for the solver.
-     *
-     * This method allows the user to specify the gradient of the objective function.
-     * \param[in] objective_gradient The gradient of the objective function to set.
-     */
-    void objective_gradient(ObjectiveGradientFunc objective_gradient) {
-      this->m_objective_gradient = objective_gradient;
+    void problem(Problem<Real> const &problem) {
+      this->m_problem = std::make_unique<ProblemWrapper<Real>>(problem);
     }
 
     /**
-     * \brief Gets the current gradient of the objective function.
-     * \return The current gradient of the objective function.
-     */
-    ObjectiveGradientFunc objective_gradient() const {return this->m_objective_gradient;}
-
-    /**
-     * \brief Sets the Hessian of the objective function for the solver.
+     * \brief Sets the problem to be solved using a unique pointer.
      *
-     * This method allows the user to specify the Hessian of the objective function.
-     * \param[in] objective_hessian The Hessian of the objective function to set.
+     * This method allows the user to specify the problem to be solved using a unique pointer.
+     * \param[in] problem The unique pointer to the problem to set.
      */
-    void objective_hessian(ObjectiveHessianFunc objective_hessian) {
-      this->m_objective_hessian = objective_hessian;
+    void problem(std::unique_ptr<Problem<Real>> &&problem) {
+      this->m_problem = std::move(problem);
     }
 
     /**
-     * \brief Gets the current Hessian of the objective function.
-     * \return The current Hessian of the objective function.
+     * \brief Gets the current problem being solved.
+     * \return A reference to the current problem.
      */
-    ObjectiveHessianFunc objective_hessian() const {return this->m_objective_hessian;}
+    Problem<Real> const& problem() const {return *this->m_problem;}
 
     /**
-     * \brief Sets the constraints function for the solver.
+     * \brief Sets the descent direction method for the solver.
      *
-     * This method allows the user to specify the constraints function.
-     * \param[in] constraints The constraints function to set.
-     */
-    void constraints(ConstraintsFunc constraints) {this->m_constraints = constraints;}
-
-    /**
-     * \brief Gets the current constraints function.
-     * \return The current constraints function.
-     */
-    ConstraintsFunc constraints() const {return this->m_constraints;}
-
-    /**
-     * \brief Sets the Jacobian of the constraints function for the solver.
+     * This method allows the user to specify the descent direction method to be used by the solver.
+     * The available methods are:
+     * - Descent::NEWTON: Use Newton's method for descent direction.
+     * - Descent::BFGS: Use BFGS method for descent direction.
+     * - Descent::STEEPEST: Use steepest descent method for descent direction.
      *
-     * This method allows the user to specify the Jacobian of the constraints function.
-     * \param[in] constraints_jacobian The Jacobian of the constraints function to set.
-     */
-    void constraints_jacobian(ConstraintsJacobianFunc constraints_jacobian) {
-      this->m_constraints_jacobian = constraints_jacobian;
-    }
-
-    /**
-     * \brief Gets the current Jacobian of the constraints function.
-     * \return The current Jacobian of the constraints function.
-     */
-    ConstraintsJacobianFunc constraints_jacobian() const {return this->m_constraints_jacobian;}
-
-    /**
-     * \brief Sets the Hessian of the Lagrangian function for the solver.
-     *
-     * This method allows the user to specify the Hessian of the Lagrangian function.
-     * \param[in] lagrangian_hessian The Hessian of the Lagrangian function to set.
-     */
-    void lagrangian_hessian(LagrangianHessianFunc lagrangian_hessian) {
-      this->m_lagrangian_hessian = lagrangian_hessian;
-    }
-
-    /**
-     * \brief Gets the current Hessian of the Lagrangian function.
-     * \return The current Hessian of the Lagrangian function.
-     */
-    LagrangianHessianFunc lagrangian_hessian() const {return this->m_lagrangian_hessian;}
-
-    /**
-     * \brief Sets the descent direction for the solver.
-     *
-     * This method allows the user to specify whether to use the Newton method
-     * or the BFGS method for computing the descent direction.
-     * \param[in] descent The descent direction to use.
+     * \param[in] descent The descent direction method to set.
      */
     void descent(Descent descent) {this->m_descent = descent;}
 
     /**
-     * \brief Gets the current descent direction.
-     * \return The current descent direction.
+     * \brief Gets the current descent direction method.
+     * \return The current descent direction method.
      */
     Descent descent() const {return this->m_descent;}
+
+    /**
+     * \brief Sets the convergence tolerance for the solver.
+     *
+     * This method allows the user to specify the tolerance for convergence.
+     * The solver will stop when the residuals are below this tolerance.
+     *
+     * \param[in] tolerance The convergence tolerance.
+     */
+    void tolerance(Real tolerance) {
+      IPSOLVER_ASSERT(tolerance > 0.0,
+        "IPsolver::Solver::tolerance(...): input value must be positive");
+      this->m_tolerance = tolerance;
+    }
+
+    /**
+     * \brief Gets the current tolerance for convergence.
+     * \return The current tolerance for convergence.
+     */
+    Real tolerance() const {return this->m_tolerance;}
 
     /**
      * \brief Sets the maximum number of iterations for the solver.
@@ -271,34 +258,6 @@ namespace IPsolver {
      * \return The current maximum number of iterations.
      */
     Integer max_iterations() const {return this->m_max_iterations;}
-
-    /**
-     * \brief Sets the convergence tolerance for the solver.
-     *
-     * This method allows the user to specify the tolerance for convergence.
-     * The solver will stop when the residuals are below this tolerance.
-     *
-     * \param[in] tolerance The convergence tolerance.
-     */
-    void tolerance(Real tolerance) {
-      IPSOLVER_ASSERT(tolerance > 0.0,
-        "IPsolver::Solver::tolerance(...): input value must be positive");
-      this->m_tolerance = tolerance;
-    }
-
-    /**
-     * \brief Sets the verbosity of the solver.
-     *
-     * This method allows the user to enable or disable verbose output during the solving process.
-     * \param[in] verbose If true, enables verbose output; otherwise, disables it.
-     */
-    void verbose(bool verbose) {this->m_verbose = verbose;}
-
-    /**
-     * \brief Gets the current verbosity setting.
-     * \return The current verbosity setting.
-     */
-    bool verbose() const {return this->m_verbose;}
 
     /**
      * \brief Sets the small constant epsilon to avoid numerical issues.
@@ -428,67 +387,54 @@ namespace IPsolver {
      */
     Real tau() const {return this->m_tau;}
 
-
     /**
      * \brief Solves the optimization problem using the interior-point method.
      *
      * This method implements the interior-point algorithm to solve the optimization problem defined
      * by the objective function, constraints, and their respective gradients and Jacobians.
      * \param[in] x_guess Initial guess for the optimization variables.
-     * \return The optimal solution vector.
+     * \param[out] x_sol Solution vector.
+     * \return True if the optimization was successful, false otherwise.
      */
-    Vector solve(const Vector& x_guess)
+    bool solve(const Vector& x_guess, Vector& x_sol)
     {
       #define CMD "IPsolver::Solver::solve(...): "
 
-      IPSOLVER_ASSERT(this->m_objective,
-        CMD "objective function must not be null");
-      IPSOLVER_ASSERT(this->m_objective_gradient,
-        CMD "gradient of the objective function must not be null");
-      IPSOLVER_ASSERT(this->m_objective_hessian || this->m_descent != Descent::NEWTON,
-        CMD "hessian of the objective function must not be null");
-      IPSOLVER_ASSERT(this->m_constraints,
-        CMD "constraints function must not be null");
-      IPSOLVER_ASSERT(this->m_constraints_jacobian,
-        CMD "jacobian of the constraints function must not be null");
-      IPSOLVER_ASSERT(this->m_lagrangian_hessian,
-        CMD "lagrangian hessian function must not be null");
+      using Array = Eigen::ArrayXd;
+      using Mask  = Eigen::Array<bool, Eigen::Dynamic, 1>;
 
       // INITIALIZATION
       // Get the number of primal variables (n), the number of constraints (m), the total number of
       // primal-dual optimization variables (nv), and initialize the Lagrange multipliers and the
       // second-order information
       Vector x(x_guess);
-      Vector c(this->m_constraints(x));
+      Vector c(this->m_problem->constraints(x));
       Integer n{static_cast<Integer>(x.size())};
       Integer m{static_cast<Integer>(c.size())};
       Integer nv{n + m};
       Vector z(Vector::Ones(m));
       Matrix B(Matrix::Identity(n, n));
 
-      Vector g_old, p_x, p_z;
-      if (this->m_verbose) {
-        std::cout << "i, f(x), lg(mu), sigma, ||r_x||, ||r_c||, alpha, #ls" << std::endl;
-      }
-
       // Repeat while the convergence criterion has not been satisfied, and we haven't reached the
       // maximum number of iterations
       Real alpha{0.0};
-      Integer ls{0};
-      for (Integer iter{0}; iter < m_max_iterations; ++iter) {
+      Vector g_old, p_x, p_z;
+      bool converged{false};
+      for (Integer iter{0}; iter < this->m_max_iterations; ++iter)
+      {
 
         // COMPUTE OBJECTIVE, GRADIENT, CONSTRAINTS, ETC
         // Compute the response of the objective function, the gradient of the objective, the
         // response of the inequality constraints, the Jacobian of the inequality constraints, the
         // Hessian of the Lagrangian (minus the Hessian of the objective) and, optionally, the
         // Hessian of the objective.
-        Real f{this->m_objective(x)};
-        c = this->m_constraints(x);
-        Vector g(this->m_objective_gradient(x));
-        Matrix J(this->m_constraints_jacobian(x, z));
-        Matrix W(this->m_lagrangian_hessian(x, z));
+        Real f{this->m_problem->objective(x)};
+        c = this->m_problem->constraints(x);
+        Vector g(this->m_problem->objective_gradient(x));
+        Matrix J(this->m_problem->constraints_jacobian(x, z));
+        Matrix W(this->m_problem->lagrangian_hessian(x, z));
         if (this->m_descent == Descent::NEWTON) {
-          B = this->m_objective_hessian(x);
+          B = this->m_problem->objective_hessian(x);
         }
 
         // Compute the responses of the unperturbed Karush-Kuhn-Tucker optimality conditions.
@@ -504,15 +450,12 @@ namespace IPsolver {
         Real duality_gap{static_cast<Real>(-c.dot(z))};
         Real mu{std::max<Real>(this->m_mu_min, sigma * duality_gap / m)};
 
-        // Print the status of the algorithm
-        if (this->m_verbose) {
-          std::cout << iter+1 << ", " << f << ", " << std::log10(mu) << ", " << sigma << ", "
-            << r_x.norm() << ", " << r_c.norm() << ", " << alpha << ", " << ls << std::endl;
-        }
-
         // CONVERGENCE CHECK
         // If the norm of the responses is less than the specified tolerance, we are done
-        if (norm_r0 / nv < this->m_tolerance) {break;}
+        if (norm_r0 / nv < this->m_tolerance) {
+          converged = true;
+          break;
+        }
 
         // Update the BFGS approximation to the Hessian of the objective
         if (this->m_descent == Descent::BFGS && iter > 0) {
@@ -543,16 +486,14 @@ namespace IPsolver {
         // point and search direction
         Real psi{this->merit(x, z, f, c, mu)};
         Real dpsi{this->grad_merit(x, z, p_x, p_z, g, c, J, mu)};
-        ls = 0;
         while (true) {
 
           // Compute the candidate point, the constraints, and the response of the objective function
           // and merit function at the candidate point
-          ++ls;
           Vector x_new(x + alpha * p_x);
           Vector z_new(z + alpha * p_z);
-          f = this->m_objective(x_new);
-          c = this->m_constraints(x_new);
+          f = this->m_problem->objective(x_new);
+          c = this->m_problem->constraints(x_new);
           Real psi_new{this->merit(x_new, z_new, f, c, mu)};
 
           // Stop backtracking search if we've found a candidate point that sufficiently decreases
@@ -566,10 +507,14 @@ namespace IPsolver {
 
           // The candidate point does not meet our criteria, so decrease the step size for 0 < β < 1.
           alpha *= this->m_beta;
-          IPSOLVER_ASSERT(alpha > this->m_alpha_min, CMD "line search step size too small");
+          if (alpha < this->m_alpha_min) {
+            IPSOLVER_ERROR(CMD "line search step size too small");
+            return false;
+          }
         }
       }
-      return x;
+      x_sol = x;
+      return converged;
 
       #undef CMD
     }

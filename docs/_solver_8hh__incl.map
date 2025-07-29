@@ -1,9 +1,14 @@
 <map id="include/IPsolver/Solver.hh" name="include/IPsolver/Solver.hh">
-<area shape="rect" id="Node000001" title=" " alt="" coords="75,5,248,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,102,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,34,86,72,83,68,142,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="126,79,197,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,31,164,63,159,63,159,31"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="222,79,296,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="180,29,232,68,229,72,176,34"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="143,5,315,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,77,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,34,88,75,86,70,196,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="101,79,168,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="215,34,164,72,161,67,211,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="192,79,266,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="232,31,232,63,226,63,226,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="309,153,405,178"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="241,30,338,139,334,142,237,33"/>
+<area shape="rect" id="Node000006" href="$_problem_8hh.html" title=" " alt="" coords="341,79,480,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="261,29,366,70,364,75,259,34"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="404,106,377,142,373,138,399,103"/>
 </map>

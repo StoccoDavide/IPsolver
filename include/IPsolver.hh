@@ -13,7 +13,7 @@
 #ifndef INCLUDE_IPSOLVER_HH
 #define INCLUDE_IPSOLVER_HH
 
-// C++ standard libraries
+// Standard libraries
 #include <iostream>
 
 // Print IPsolver errors

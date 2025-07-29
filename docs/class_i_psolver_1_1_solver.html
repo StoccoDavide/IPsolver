@@ -135,30 +135,34 @@ $(function(){initNavTree('class_i_psolver_1_1_solver.html','','class_i_psolver_1
 </div><!--header-->
 <div class="contents">
 
+<p><a class="el" href="class_i_psolver_1_1_solver.html" title="Solver class for the IPsolver library.">Solver</a> class for the <a class="el" href="namespace_i_psolver.html" title="Namespace for the IPsolver library.">IPsolver</a> library.  
+ <a href="#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="_solver_8hh_source.html">Solver.hh</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a07bb173fc9bb10f1c3c75ee7fab1e27e" id="r_a07bb173fc9bb10f1c3c75ee7fab1e27e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07bb173fc9bb10f1c3c75ee7fab1e27e">Descent</a></td></tr>
-<tr class="memitem:aac4ca02033f365576ed29b6accf17a9f" id="r_aac4ca02033f365576ed29b6accf17a9f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> = Eigen::VectorXd</td></tr>
-<tr class="memitem:ab10e75668dbe4559dfd3e736f75dab68" id="r_ab10e75668dbe4559dfd3e736f75dab68"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a> = Eigen::MatrixXd</td></tr>
-<tr class="memitem:a00d16f52ac87d4c4ec1541e98a054d74" id="r_a00d16f52ac87d4c4ec1541e98a054d74"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00d16f52ac87d4c4ec1541e98a054d74">Array</a> = Eigen::ArrayXd</td></tr>
-<tr class="memitem:a6df8f1b1314fc5ad543f9dd73ce7ac08" id="r_a6df8f1b1314fc5ad543f9dd73ce7ac08"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6df8f1b1314fc5ad543f9dd73ce7ac08">Mask</a> = Eigen::Array&lt;bool, Eigen::Dynamic, 1&gt;</td></tr>
-<tr class="memitem:a953ad1877e476e3ef85ea499079072dc" id="r_a953ad1877e476e3ef85ea499079072dc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a953ad1877e476e3ef85ea499079072dc">ObjectiveFunc</a> = std::function&lt;Real(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td></tr>
-<tr class="memitem:a0b48ad9349f8eafd79df10e4fb3ca3ec" id="r_a0b48ad9349f8eafd79df10e4fb3ca3ec"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">ObjectiveGradientFunc</a> = std::function&lt;<a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td></tr>
-<tr class="memitem:afe8bcadd99d428b5ecb3f1cf2f8c300a" id="r_afe8bcadd99d428b5ecb3f1cf2f8c300a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe8bcadd99d428b5ecb3f1cf2f8c300a">ObjectiveHessianFunc</a> = std::function&lt;<a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a>(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td></tr>
-<tr class="memitem:a32722ffcb84ae8a06669fa4ebb2a8d81" id="r_a32722ffcb84ae8a06669fa4ebb2a8d81"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32722ffcb84ae8a06669fa4ebb2a8d81">ConstraintsFunc</a> = std::function&lt;<a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td></tr>
-<tr class="memitem:a92b153a8c25fe466f9407482f99ae233" id="r_a92b153a8c25fe466f9407482f99ae233"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92b153a8c25fe466f9407482f99ae233">ConstraintsJacobianFunc</a> = std::function&lt;<a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a>(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td></tr>
-<tr class="memitem:ada8d6ea58187e1c7ceb151c13cb9eb94" id="r_ada8d6ea58187e1c7ceb151c13cb9eb94"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada8d6ea58187e1c7ceb151c13cb9eb94">LagrangianHessianFunc</a> = std::function&lt;<a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a>(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td></tr>
+<tr class="memitem:a5168729763676556dd3db98c64e34b82" id="r_a5168729763676556dd3db98c64e34b82"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5168729763676556dd3db98c64e34b82">UniquePtr</a> = std::unique_ptr&lt;<a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt;Real&gt;&gt;</td></tr>
+<tr class="memitem:aa93c2e5d5b7ba9898eca3d3c9cc022e9" id="r_aa93c2e5d5b7ba9898eca3d3c9cc022e9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> = typename <a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt;Real&gt;::Vector</td></tr>
+<tr class="memitem:a57125337561c872e6bb67e3d7037fa8a" id="r_a57125337561c872e6bb67e3d7037fa8a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57125337561c872e6bb67e3d7037fa8a">Matrix</a> = typename <a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt;Real&gt;::Matrix</td></tr>
+<tr class="memitem:a256b7bd6d5ff1943f38e457621c9a0ac" id="r_a256b7bd6d5ff1943f38e457621c9a0ac"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a256b7bd6d5ff1943f38e457621c9a0ac">ObjectiveFunc</a> = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::ObjectiveFunc</td></tr>
+<tr class="memitem:a04caab5ee2ef99ae2392867cc8d7f963" id="r_a04caab5ee2ef99ae2392867cc8d7f963"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04caab5ee2ef99ae2392867cc8d7f963">ObjectiveGradientFunc</a> = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::ObjectiveGradientFunc</td></tr>
+<tr class="memitem:a98f3cc897c146b8d7cf6fb0b697967f7" id="r_a98f3cc897c146b8d7cf6fb0b697967f7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98f3cc897c146b8d7cf6fb0b697967f7">ObjectiveHessianFunc</a> = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::ObjectiveHessianFunc</td></tr>
+<tr class="memitem:af9a640a727f6459a4c0b5ca622ab41c3" id="r_af9a640a727f6459a4c0b5ca622ab41c3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9a640a727f6459a4c0b5ca622ab41c3">ConstraintsFunc</a> = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::ConstraintsFunc</td></tr>
+<tr class="memitem:aee4e6c5e2b0369fae41db5b73867effc" id="r_aee4e6c5e2b0369fae41db5b73867effc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee4e6c5e2b0369fae41db5b73867effc">ConstraintsJacobianFunc</a> = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::ConstraintsJacobianFunc</td></tr>
+<tr class="memitem:a8c33a896b581a8955fdf5f1d9a8f5138" id="r_a8c33a896b581a8955fdf5f1d9a8f5138"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c33a896b581a8955fdf5f1d9a8f5138">LagrangianHessianFunc</a> = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::LagrangianHessianFunc</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a07d328192073f61ab7600deaccdc7361" id="r_a07d328192073f61ab7600deaccdc7361"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07d328192073f61ab7600deaccdc7361">Solver</a> ()</td></tr>
 <tr class="memdesc:a07d328192073f61ab7600deaccdc7361"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor for the IPSolver class.  <br /></td></tr>
-<tr class="memitem:a27004c1b8546fab369bc3a9efac6b500" id="r_a27004c1b8546fab369bc3a9efac6b500"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27004c1b8546fab369bc3a9efac6b500">Solver</a> (<a class="el" href="#a953ad1877e476e3ef85ea499079072dc">ObjectiveFunc</a> const &amp;<a class="el" href="#a2d73a9b8b5410327a2510cbb2329d298">objective</a>, <a class="el" href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">ObjectiveGradientFunc</a> const &amp;<a class="el" href="#abfbcc277d52726e8cbc59157f94dc9cb">objective_gradient</a>, <a class="el" href="#a32722ffcb84ae8a06669fa4ebb2a8d81">ConstraintsFunc</a> const &amp;<a class="el" href="#a905c2ac54c76f1167f36cd4fcc8da332">constraints</a>, <a class="el" href="#a92b153a8c25fe466f9407482f99ae233">ConstraintsJacobianFunc</a> const &amp;<a class="el" href="#add7e595ba4bacd5f64cf3079e64d4f50">constraints_jacobian</a>, <a class="el" href="#ada8d6ea58187e1c7ceb151c13cb9eb94">LagrangianHessianFunc</a> const &amp;<a class="el" href="#aa8c24c5a6f5093606b872ca2f9d1769e">lagrangian_hessian</a>)</td></tr>
+<tr class="memitem:a27004c1b8546fab369bc3a9efac6b500" id="r_a27004c1b8546fab369bc3a9efac6b500"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27004c1b8546fab369bc3a9efac6b500">Solver</a> (<a class="el" href="#a256b7bd6d5ff1943f38e457621c9a0ac">ObjectiveFunc</a> const &amp;objective, <a class="el" href="#a04caab5ee2ef99ae2392867cc8d7f963">ObjectiveGradientFunc</a> const &amp;objective_gradient, <a class="el" href="#af9a640a727f6459a4c0b5ca622ab41c3">ConstraintsFunc</a> const &amp;constraints, <a class="el" href="#aee4e6c5e2b0369fae41db5b73867effc">ConstraintsJacobianFunc</a> const &amp;constraints_jacobian, <a class="el" href="#a8c33a896b581a8955fdf5f1d9a8f5138">LagrangianHessianFunc</a> const &amp;lagrangian_hessian)</td></tr>
 <tr class="memdesc:a27004c1b8546fab369bc3a9efac6b500"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the IPSolver class.  <br /></td></tr>
-<tr class="memitem:a4c3e9d85ab20118e20d0d13f0b9659ce" id="r_a4c3e9d85ab20118e20d0d13f0b9659ce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c3e9d85ab20118e20d0d13f0b9659ce">Solver</a> (<a class="el" href="#a953ad1877e476e3ef85ea499079072dc">ObjectiveFunc</a> const &amp;<a class="el" href="#a2d73a9b8b5410327a2510cbb2329d298">objective</a>, <a class="el" href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">ObjectiveGradientFunc</a> const &amp;<a class="el" href="#abfbcc277d52726e8cbc59157f94dc9cb">objective_gradient</a>, <a class="el" href="#afe8bcadd99d428b5ecb3f1cf2f8c300a">ObjectiveHessianFunc</a> const &amp;<a class="el" href="#ae8ec7f6d4719a7e0222809f7582b665a">objective_hessian</a>, <a class="el" href="#a32722ffcb84ae8a06669fa4ebb2a8d81">ConstraintsFunc</a> const &amp;<a class="el" href="#a905c2ac54c76f1167f36cd4fcc8da332">constraints</a>, <a class="el" href="#a92b153a8c25fe466f9407482f99ae233">ConstraintsJacobianFunc</a> const &amp;<a class="el" href="#add7e595ba4bacd5f64cf3079e64d4f50">constraints_jacobian</a>, <a class="el" href="#ada8d6ea58187e1c7ceb151c13cb9eb94">LagrangianHessianFunc</a> const &amp;<a class="el" href="#aa8c24c5a6f5093606b872ca2f9d1769e">lagrangian_hessian</a>)</td></tr>
+<tr class="memitem:a4c3e9d85ab20118e20d0d13f0b9659ce" id="r_a4c3e9d85ab20118e20d0d13f0b9659ce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c3e9d85ab20118e20d0d13f0b9659ce">Solver</a> (<a class="el" href="#a256b7bd6d5ff1943f38e457621c9a0ac">ObjectiveFunc</a> const &amp;objective, <a class="el" href="#a04caab5ee2ef99ae2392867cc8d7f963">ObjectiveGradientFunc</a> const &amp;objective_gradient, <a class="el" href="#a98f3cc897c146b8d7cf6fb0b697967f7">ObjectiveHessianFunc</a> const &amp;objective_hessian, <a class="el" href="#af9a640a727f6459a4c0b5ca622ab41c3">ConstraintsFunc</a> const &amp;constraints, <a class="el" href="#aee4e6c5e2b0369fae41db5b73867effc">ConstraintsJacobianFunc</a> const &amp;constraints_jacobian, <a class="el" href="#a8c33a896b581a8955fdf5f1d9a8f5138">LagrangianHessianFunc</a> const &amp;lagrangian_hessian)</td></tr>
 <tr class="memdesc:a4c3e9d85ab20118e20d0d13f0b9659ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the IPSolver class (with Hessian).  <br /></td></tr>
+<tr class="memitem:a5c2e67131144d91c2fa7445c3a52a845" id="r_a5c2e67131144d91c2fa7445c3a52a845"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c2e67131144d91c2fa7445c3a52a845">Solver</a> (std::unique_ptr&lt; <a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt; Real &gt; &gt; &amp;&amp;<a class="el" href="#a28339343536640293164bf6138228146">problem</a>, <a class="el" href="#a07bb173fc9bb10f1c3c75ee7fab1e27e">Descent</a> <a class="el" href="#a3694b454193cb8dacd7d92ad7f968e48">descent</a>=Descent::NEWTON)</td></tr>
+<tr class="memdesc:a5c2e67131144d91c2fa7445c3a52a845"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the IPSolver class (with a unique pointer to a <a class="el" href="class_i_psolver_1_1_problem.html" title="Problem class for the IPsolver library.">Problem</a> object).  <br /></td></tr>
 <tr class="memitem:ac6b2e477735a180c2a0b56cca572dfd6" id="r_ac6b2e477735a180c2a0b56cca572dfd6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6b2e477735a180c2a0b56cca572dfd6">Solver</a> (const <a class="el" href="class_i_psolver_1_1_solver.html">Solver</a> &amp;)=delete</td></tr>
 <tr class="memdesc:ac6b2e477735a180c2a0b56cca572dfd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deleted copy constructor.  <br /></td></tr>
 <tr class="memitem:a6664e8fcf4fd1b96d022590a9a05ecee" id="r_a6664e8fcf4fd1b96d022590a9a05ecee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_i_psolver_1_1_solver.html">Solver</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6664e8fcf4fd1b96d022590a9a05ecee">operator=</a> (const <a class="el" href="class_i_psolver_1_1_solver.html">Solver</a> &amp;)=delete</td></tr>
@@ -169,44 +173,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a8b08c0820f6c840be1515301c54af99a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deleted move assignment operator.  <br /></td></tr>
 <tr class="memitem:a3382169f83b99fdfcec13da2b486d8ef" id="r_a3382169f83b99fdfcec13da2b486d8ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3382169f83b99fdfcec13da2b486d8ef">~Solver</a> ()=default</td></tr>
 <tr class="memdesc:a3382169f83b99fdfcec13da2b486d8ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for the IPSolver class.  <br /></td></tr>
-<tr class="memitem:a2d73a9b8b5410327a2510cbb2329d298" id="r_a2d73a9b8b5410327a2510cbb2329d298"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d73a9b8b5410327a2510cbb2329d298">objective</a> (<a class="el" href="#a953ad1877e476e3ef85ea499079072dc">ObjectiveFunc</a> objective)</td></tr>
-<tr class="memdesc:a2d73a9b8b5410327a2510cbb2329d298"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the objective function for the solver.  <br /></td></tr>
-<tr class="memitem:af4011af005ea1169a124f37001625964" id="r_af4011af005ea1169a124f37001625964"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a953ad1877e476e3ef85ea499079072dc">ObjectiveFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4011af005ea1169a124f37001625964">objective</a> () const</td></tr>
-<tr class="memdesc:af4011af005ea1169a124f37001625964"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current objective function.  <br /></td></tr>
-<tr class="memitem:abfbcc277d52726e8cbc59157f94dc9cb" id="r_abfbcc277d52726e8cbc59157f94dc9cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfbcc277d52726e8cbc59157f94dc9cb">objective_gradient</a> (<a class="el" href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">ObjectiveGradientFunc</a> objective_gradient)</td></tr>
-<tr class="memdesc:abfbcc277d52726e8cbc59157f94dc9cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the gradient of the objective function for the solver.  <br /></td></tr>
-<tr class="memitem:a330bd27dc2125b1c380de0b8f31470d1" id="r_a330bd27dc2125b1c380de0b8f31470d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">ObjectiveGradientFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a330bd27dc2125b1c380de0b8f31470d1">objective_gradient</a> () const</td></tr>
-<tr class="memdesc:a330bd27dc2125b1c380de0b8f31470d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current gradient of the objective function.  <br /></td></tr>
-<tr class="memitem:ae8ec7f6d4719a7e0222809f7582b665a" id="r_ae8ec7f6d4719a7e0222809f7582b665a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae8ec7f6d4719a7e0222809f7582b665a">objective_hessian</a> (<a class="el" href="#afe8bcadd99d428b5ecb3f1cf2f8c300a">ObjectiveHessianFunc</a> objective_hessian)</td></tr>
-<tr class="memdesc:ae8ec7f6d4719a7e0222809f7582b665a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Hessian of the objective function for the solver.  <br /></td></tr>
-<tr class="memitem:a6fc7b447162946218d93804854ca0b82" id="r_a6fc7b447162946218d93804854ca0b82"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#afe8bcadd99d428b5ecb3f1cf2f8c300a">ObjectiveHessianFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6fc7b447162946218d93804854ca0b82">objective_hessian</a> () const</td></tr>
-<tr class="memdesc:a6fc7b447162946218d93804854ca0b82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current Hessian of the objective function.  <br /></td></tr>
-<tr class="memitem:a905c2ac54c76f1167f36cd4fcc8da332" id="r_a905c2ac54c76f1167f36cd4fcc8da332"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a905c2ac54c76f1167f36cd4fcc8da332">constraints</a> (<a class="el" href="#a32722ffcb84ae8a06669fa4ebb2a8d81">ConstraintsFunc</a> constraints)</td></tr>
-<tr class="memdesc:a905c2ac54c76f1167f36cd4fcc8da332"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the constraints function for the solver.  <br /></td></tr>
-<tr class="memitem:a9428e0fe0b12d1dddfbc26ee5fea953c" id="r_a9428e0fe0b12d1dddfbc26ee5fea953c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a32722ffcb84ae8a06669fa4ebb2a8d81">ConstraintsFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9428e0fe0b12d1dddfbc26ee5fea953c">constraints</a> () const</td></tr>
-<tr class="memdesc:a9428e0fe0b12d1dddfbc26ee5fea953c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current constraints function.  <br /></td></tr>
-<tr class="memitem:add7e595ba4bacd5f64cf3079e64d4f50" id="r_add7e595ba4bacd5f64cf3079e64d4f50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add7e595ba4bacd5f64cf3079e64d4f50">constraints_jacobian</a> (<a class="el" href="#a92b153a8c25fe466f9407482f99ae233">ConstraintsJacobianFunc</a> constraints_jacobian)</td></tr>
-<tr class="memdesc:add7e595ba4bacd5f64cf3079e64d4f50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Jacobian of the constraints function for the solver.  <br /></td></tr>
-<tr class="memitem:aa5a764c1489428fe975d26dfe2beaa06" id="r_aa5a764c1489428fe975d26dfe2beaa06"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a92b153a8c25fe466f9407482f99ae233">ConstraintsJacobianFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5a764c1489428fe975d26dfe2beaa06">constraints_jacobian</a> () const</td></tr>
-<tr class="memdesc:aa5a764c1489428fe975d26dfe2beaa06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current Jacobian of the constraints function.  <br /></td></tr>
-<tr class="memitem:aa8c24c5a6f5093606b872ca2f9d1769e" id="r_aa8c24c5a6f5093606b872ca2f9d1769e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8c24c5a6f5093606b872ca2f9d1769e">lagrangian_hessian</a> (<a class="el" href="#ada8d6ea58187e1c7ceb151c13cb9eb94">LagrangianHessianFunc</a> lagrangian_hessian)</td></tr>
-<tr class="memdesc:aa8c24c5a6f5093606b872ca2f9d1769e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the Hessian of the Lagrangian function for the solver.  <br /></td></tr>
-<tr class="memitem:aa75f6985b4a4744a7feed835be8caaf6" id="r_aa75f6985b4a4744a7feed835be8caaf6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ada8d6ea58187e1c7ceb151c13cb9eb94">LagrangianHessianFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa75f6985b4a4744a7feed835be8caaf6">lagrangian_hessian</a> () const</td></tr>
-<tr class="memdesc:aa75f6985b4a4744a7feed835be8caaf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current Hessian of the Lagrangian function.  <br /></td></tr>
+<tr class="memitem:a28339343536640293164bf6138228146" id="r_a28339343536640293164bf6138228146"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28339343536640293164bf6138228146">problem</a> (<a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt; Real &gt; const &amp;problem)</td></tr>
+<tr class="memdesc:a28339343536640293164bf6138228146"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the problem to be solved.  <br /></td></tr>
+<tr class="memitem:ae051f608de37918bde556dc02e911c3b" id="r_ae051f608de37918bde556dc02e911c3b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae051f608de37918bde556dc02e911c3b">problem</a> (std::unique_ptr&lt; <a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt; Real &gt; &gt; &amp;&amp;problem)</td></tr>
+<tr class="memdesc:ae051f608de37918bde556dc02e911c3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the problem to be solved using a unique pointer.  <br /></td></tr>
+<tr class="memitem:ac85ba7a887031c20bc48281dacd16887" id="r_ac85ba7a887031c20bc48281dacd16887"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt; Real &gt; const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac85ba7a887031c20bc48281dacd16887">problem</a> () const</td></tr>
+<tr class="memdesc:ac85ba7a887031c20bc48281dacd16887"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current problem being solved.  <br /></td></tr>
 <tr class="memitem:a3694b454193cb8dacd7d92ad7f968e48" id="r_a3694b454193cb8dacd7d92ad7f968e48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3694b454193cb8dacd7d92ad7f968e48">descent</a> (<a class="el" href="#a07bb173fc9bb10f1c3c75ee7fab1e27e">Descent</a> descent)</td></tr>
-<tr class="memdesc:a3694b454193cb8dacd7d92ad7f968e48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the descent direction for the solver.  <br /></td></tr>
+<tr class="memdesc:a3694b454193cb8dacd7d92ad7f968e48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the descent direction method for the solver.  <br /></td></tr>
 <tr class="memitem:a3cabbcc01c0262fdb4fe59f6bd7dadc5" id="r_a3cabbcc01c0262fdb4fe59f6bd7dadc5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a07bb173fc9bb10f1c3c75ee7fab1e27e">Descent</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3cabbcc01c0262fdb4fe59f6bd7dadc5">descent</a> () const</td></tr>
-<tr class="memdesc:a3cabbcc01c0262fdb4fe59f6bd7dadc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current descent direction.  <br /></td></tr>
+<tr class="memdesc:a3cabbcc01c0262fdb4fe59f6bd7dadc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current descent direction method.  <br /></td></tr>
+<tr class="memitem:a5d6ae25717b882882c5b280ce663e1a0" id="r_a5d6ae25717b882882c5b280ce663e1a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d6ae25717b882882c5b280ce663e1a0">tolerance</a> (Real tolerance)</td></tr>
+<tr class="memdesc:a5d6ae25717b882882c5b280ce663e1a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the convergence tolerance for the solver.  <br /></td></tr>
+<tr class="memitem:a80b3872c6eaee92233b83df4435c2aad" id="r_a80b3872c6eaee92233b83df4435c2aad"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80b3872c6eaee92233b83df4435c2aad">tolerance</a> () const</td></tr>
+<tr class="memdesc:a80b3872c6eaee92233b83df4435c2aad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current tolerance for convergence.  <br /></td></tr>
 <tr class="memitem:ad845c2d228c5e730d7a801f5b3e3d453" id="r_ad845c2d228c5e730d7a801f5b3e3d453"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad845c2d228c5e730d7a801f5b3e3d453">max_iterations</a> (<a class="el" href="namespace_i_psolver.html#a9cfbb973ab821211ecc159aeef1330d7">Integer</a> max_iterations)</td></tr>
 <tr class="memdesc:ad845c2d228c5e730d7a801f5b3e3d453"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the maximum number of iterations for the solver.  <br /></td></tr>
 <tr class="memitem:ae6a4afc78765c5e1d71ede8a31f64c17" id="r_ae6a4afc78765c5e1d71ede8a31f64c17"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_i_psolver.html#a9cfbb973ab821211ecc159aeef1330d7">Integer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6a4afc78765c5e1d71ede8a31f64c17">max_iterations</a> () const</td></tr>
 <tr class="memdesc:ae6a4afc78765c5e1d71ede8a31f64c17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current maximum number of iterations.  <br /></td></tr>
-<tr class="memitem:a5d6ae25717b882882c5b280ce663e1a0" id="r_a5d6ae25717b882882c5b280ce663e1a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d6ae25717b882882c5b280ce663e1a0">tolerance</a> (Real tolerance)</td></tr>
-<tr class="memdesc:a5d6ae25717b882882c5b280ce663e1a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the convergence tolerance for the solver.  <br /></td></tr>
-<tr class="memitem:a993566d2a9e8b65eeb65832f1f56e0e7" id="r_a993566d2a9e8b65eeb65832f1f56e0e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a993566d2a9e8b65eeb65832f1f56e0e7">verbose</a> (bool verbose)</td></tr>
-<tr class="memdesc:a993566d2a9e8b65eeb65832f1f56e0e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the verbosity of the solver.  <br /></td></tr>
-<tr class="memitem:a83add35204780de82d77c22ded1f82a0" id="r_a83add35204780de82d77c22ded1f82a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83add35204780de82d77c22ded1f82a0">verbose</a> () const</td></tr>
-<tr class="memdesc:a83add35204780de82d77c22ded1f82a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current verbosity setting.  <br /></td></tr>
 <tr class="memitem:af4a038263f96d6dd5f7425ba7d812c6a" id="r_af4a038263f96d6dd5f7425ba7d812c6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4a038263f96d6dd5f7425ba7d812c6a">epsilon</a> (Real epsilon)</td></tr>
 <tr class="memdesc:af4a038263f96d6dd5f7425ba7d812c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the small constant epsilon to avoid numerical issues.  <br /></td></tr>
 <tr class="memitem:ad1e6f03d9d026b99d5e65bb39e7c54af" id="r_ad1e6f03d9d026b99d5e65bb39e7c54af"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1e6f03d9d026b99d5e65bb39e7c54af">epsilon</a> () const</td></tr>
@@ -239,30 +223,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae6415d12ae8e8c09f7979256a8742100"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the parameter for the sufficient decrease condition tau.  <br /></td></tr>
 <tr class="memitem:a0eb35e65d22cc76798f70ee68f8ec349" id="r_a0eb35e65d22cc76798f70ee68f8ec349"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0eb35e65d22cc76798f70ee68f8ec349">tau</a> () const</td></tr>
 <tr class="memdesc:a0eb35e65d22cc76798f70ee68f8ec349"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current value for tau.  <br /></td></tr>
-<tr class="memitem:a59a25a07232dd604132b3ed8451a4408" id="r_a59a25a07232dd604132b3ed8451a4408"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a59a25a07232dd604132b3ed8451a4408">solve</a> (const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;x_guess)</td></tr>
-<tr class="memdesc:a59a25a07232dd604132b3ed8451a4408"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the optimization problem using the interior-point method.  <br /></td></tr>
+<tr class="memitem:aa51ed68e49be126c8f3f6bfab280e014" id="r_aa51ed68e49be126c8f3f6bfab280e014"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa51ed68e49be126c8f3f6bfab280e014">solve</a> (const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;x_guess, <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;x_sol)</td></tr>
+<tr class="memdesc:aa51ed68e49be126c8f3f6bfab280e014"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the optimization problem using the interior-point method.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-methods" class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:ad9480de5dcf5960835cdcc930aa21b7d" id="r_ad9480de5dcf5960835cdcc930aa21b7d"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9480de5dcf5960835cdcc930aa21b7d">merit</a> (const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;x, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;z, Real f, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;c, Real mu)</td></tr>
+<tr class="memitem:ad9480de5dcf5960835cdcc930aa21b7d" id="r_ad9480de5dcf5960835cdcc930aa21b7d"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9480de5dcf5960835cdcc930aa21b7d">merit</a> (const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;x, const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;z, Real f, const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;c, Real mu)</td></tr>
 <tr class="memdesc:ad9480de5dcf5960835cdcc930aa21b7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the merit function.  <br /></td></tr>
-<tr class="memitem:afe3bc343a72e75b54d27ac8d3447dc98" id="r_afe3bc343a72e75b54d27ac8d3447dc98"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe3bc343a72e75b54d27ac8d3447dc98">grad_merit</a> (const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;x, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;z, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;p_x, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;p_z, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;g, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;c, const <a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a> &amp;J, Real mu)</td></tr>
+<tr class="memitem:afe3bc343a72e75b54d27ac8d3447dc98" id="r_afe3bc343a72e75b54d27ac8d3447dc98"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe3bc343a72e75b54d27ac8d3447dc98">grad_merit</a> (const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;x, const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;z, const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;p_x, const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;p_z, const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;g, const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;c, const <a class="el" href="#a57125337561c872e6bb67e3d7037fa8a">Matrix</a> &amp;J, Real mu)</td></tr>
 <tr class="memdesc:afe3bc343a72e75b54d27ac8d3447dc98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the directional derivative of the merit function.  <br /></td></tr>
-<tr class="memitem:aeb95e4e50a6d998cb75811e89b3debb5" id="r_aeb95e4e50a6d998cb75811e89b3debb5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb95e4e50a6d998cb75811e89b3debb5">bfgs_update</a> (const <a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a> &amp;B, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;s, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;y)</td></tr>
+<tr class="memitem:aeb95e4e50a6d998cb75811e89b3debb5" id="r_aeb95e4e50a6d998cb75811e89b3debb5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a57125337561c872e6bb67e3d7037fa8a">Matrix</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb95e4e50a6d998cb75811e89b3debb5">bfgs_update</a> (const <a class="el" href="#a57125337561c872e6bb67e3d7037fa8a">Matrix</a> &amp;B, const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;s, const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;y)</td></tr>
 <tr class="memdesc:aeb95e4e50a6d998cb75811e89b3debb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Browder-Broyden-Fletcher-Goldfarb-Shanno (BFGS) update for the Hessian approximation.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:ac87601dcd973f07e41f571606e831c3e" id="r_ac87601dcd973f07e41f571606e831c3e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a953ad1877e476e3ef85ea499079072dc">ObjectiveFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac87601dcd973f07e41f571606e831c3e">m_objective</a> {nullptr}</td></tr>
-<tr class="memitem:a9d432742823dae3e653631f5f999f67e" id="r_a9d432742823dae3e653631f5f999f67e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">ObjectiveGradientFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d432742823dae3e653631f5f999f67e">m_objective_gradient</a> {nullptr}</td></tr>
-<tr class="memitem:adb4457f0808bd99899912becb7209fb2" id="r_adb4457f0808bd99899912becb7209fb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#afe8bcadd99d428b5ecb3f1cf2f8c300a">ObjectiveHessianFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb4457f0808bd99899912becb7209fb2">m_objective_hessian</a> {nullptr}</td></tr>
-<tr class="memitem:af1f92977f76265e570660fa69777d02c" id="r_af1f92977f76265e570660fa69777d02c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a32722ffcb84ae8a06669fa4ebb2a8d81">ConstraintsFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1f92977f76265e570660fa69777d02c">m_constraints</a> {nullptr}</td></tr>
-<tr class="memitem:ab7c7de175c89fc23b542ce4a48c974ad" id="r_ab7c7de175c89fc23b542ce4a48c974ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a92b153a8c25fe466f9407482f99ae233">ConstraintsJacobianFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7c7de175c89fc23b542ce4a48c974ad">m_constraints_jacobian</a> {nullptr}</td></tr>
-<tr class="memitem:a3569241702f64a2837d0a1821aaeee89" id="r_a3569241702f64a2837d0a1821aaeee89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ada8d6ea58187e1c7ceb151c13cb9eb94">LagrangianHessianFunc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3569241702f64a2837d0a1821aaeee89">m_lagrangian_hessian</a> {nullptr}</td></tr>
+<tr class="memitem:a462ee930675224cc7f0179fea564732a" id="r_a462ee930675224cc7f0179fea564732a"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt; Real &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a462ee930675224cc7f0179fea564732a">m_problem</a></td></tr>
 <tr class="memitem:acbad3d62e60d4771986babe26f92eb8a" id="r_acbad3d62e60d4771986babe26f92eb8a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a07bb173fc9bb10f1c3c75ee7fab1e27e">Descent</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbad3d62e60d4771986babe26f92eb8a">m_descent</a> {Descent::NEWTON}</td></tr>
 <tr class="memitem:a3f1c286843f17a46c0ea003735248516" id="r_a3f1c286843f17a46c0ea003735248516"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f1c286843f17a46c0ea003735248516">m_tolerance</a> {1e-6}</td></tr>
 <tr class="memitem:a8b98a9854bd7b032b6ad897028308145" id="r_a8b98a9854bd7b032b6ad897028308145"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_i_psolver.html#a9cfbb973ab821211ecc159aeef1330d7">Integer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b98a9854bd7b032b6ad897028308145">m_max_iterations</a> {100}</td></tr>
-<tr class="memitem:a9c5443ce4cbbd29ae4187ba4663b096a" id="r_a9c5443ce4cbbd29ae4187ba4663b096a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c5443ce4cbbd29ae4187ba4663b096a">m_verbose</a> {false}</td></tr>
 <tr class="memitem:aa9a3e8682f0587716c7cb11996e4a399" id="r_aa9a3e8682f0587716c7cb11996e4a399"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9a3e8682f0587716c7cb11996e4a399">m_epsilon</a> {1e-8}</td></tr>
 <tr class="memitem:aa10f5876aeb017cd253f38c2f2af36f8" id="r_aa10f5876aeb017cd253f38c2f2af36f8"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa10f5876aeb017cd253f38c2f2af36f8">m_sigma_max</a> {0.5}</td></tr>
 <tr class="memitem:aa27b5f17117038c193dc7b9a9132eedc" id="r_aa27b5f17117038c193dc7b9a9132eedc"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa27b5f17117038c193dc7b9a9132eedc">m_eta_max</a> {0.25}</td></tr>
@@ -272,9 +250,22 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a4a8ade4872453d7573c824c4068a48ba" id="r_a4a8ade4872453d7573c824c4068a48ba"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a8ade4872453d7573c824c4068a48ba">m_beta</a> {0.75}</td></tr>
 <tr class="memitem:acf07c94c1b136ceba58616a082ce9a31" id="r_acf07c94c1b136ceba58616a082ce9a31"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf07c94c1b136ceba58616a082ce9a31">m_tau</a> {0.01}</td></tr>
 </table>
-<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
-<a id="a00d16f52ac87d4c4ec1541e98a054d74" name="a00d16f52ac87d4c4ec1541e98a054d74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00d16f52ac87d4c4ec1541e98a054d74">&#9670;&#160;</a></span>Array</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename Real&gt;<br />
+class IPsolver::Solver&lt; Real &gt;</div><p>The <a class="el" href="class_i_psolver_1_1_solver.html" title="Solver class for the IPsolver library.">Solver</a> class provides an interface for solving convex optimization problems using interior-point methods.</p>
+<p>The solver can handle problems of the form:      </p><p class="formulaDsp">
+\[ \begin{array}{l}
+   \text{minimize} ~ f(\mathbf{x}) \\
+   \text{subject to} ~ \mathbf{c}(\mathbf{x}) &lt; \mathbf{0}
+ \end{array}
+\]
+</p>
+<p> where \(\mathbf{x} \in \mathbb{R}^n\) is the vector of optimization variables,  \(f: \mathbb{R}^n
+\to \mathbb{R}\) is the convex objective function, and \(\mathbf{c}: \mathbb{R}^n \to \mathbb{R}^m\) is the vector of convex inequality constraints.</p>
+<p>The solver supports different descent methods, including Newton's method, BFGS and steepest descent. The user can specify the desired method through the <span class="tt">descent</span> method. </p>
+</div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
+<a id="af9a640a727f6459a4c0b5ca622ab41c3" name="af9a640a727f6459a4c0b5ca622ab41c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9a640a727f6459a4c0b5ca622ab41c3">&#9670;&#160;</a></span>ConstraintsFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -282,16 +273,15 @@ Private Attributes</h2></td></tr>
 template&lt;typename Real&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::Array = Eigen::ArrayXd</td>
+          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::ConstraintsFunc = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::ConstraintsFunc</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="#a00d16f52ac87d4c4ec1541e98a054d74">Array</a> type (Eigen dense dynamic array) </p>
 
 </div>
 </div>
-<a id="a32722ffcb84ae8a06669fa4ebb2a8d81" name="a32722ffcb84ae8a06669fa4ebb2a8d81"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32722ffcb84ae8a06669fa4ebb2a8d81">&#9670;&#160;</a></span>ConstraintsFunc</h2>
+<a id="aee4e6c5e2b0369fae41db5b73867effc" name="aee4e6c5e2b0369fae41db5b73867effc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee4e6c5e2b0369fae41db5b73867effc">&#9670;&#160;</a></span>ConstraintsJacobianFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -299,28 +289,10 @@ template&lt;typename Real&gt; </div>
 template&lt;typename Real&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::ConstraintsFunc = std::function&lt;<a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td>
+          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::ConstraintsJacobianFunc = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::ConstraintsJacobianFunc</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Constraints function type </p>
-
-</div>
-</div>
-<a id="a92b153a8c25fe466f9407482f99ae233" name="a92b153a8c25fe466f9407482f99ae233"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92b153a8c25fe466f9407482f99ae233">&#9670;&#160;</a></span>ConstraintsJacobianFunc</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::ConstraintsJacobianFunc = std::function&lt;<a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a>(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Jacobian function type </p>
 
 </div>
 </div>
@@ -342,14 +314,14 @@ template&lt;typename Real&gt; </div>
 <div class="line">      BFGS     = 1, </div>
 <div class="line">      STEEPEST = 2  </div>
 <div class="line">    }</div>
-<div class="ttc" id="aclass_i_psolver_1_1_solver_html_a07bb173fc9bb10f1c3c75ee7fab1e27e"><div class="ttname"><a href="#a07bb173fc9bb10f1c3c75ee7fab1e27e">IPsolver::Solver::Descent</a></div><div class="ttdeci">enum class Descent :Integer { NEWTON=0, BFGS=1, STEEPEST=2 } Descent</div><div class="ttdef"><b>Definition</b> Solver.hh:26</div></div>
+<div class="ttc" id="aclass_i_psolver_1_1_solver_html_a07bb173fc9bb10f1c3c75ee7fab1e27e"><div class="ttname"><a href="#a07bb173fc9bb10f1c3c75ee7fab1e27e">IPsolver::Solver::Descent</a></div><div class="ttdeci">enum class Descent :Integer { NEWTON=0, BFGS=1, STEEPEST=2 } Descent</div><div class="ttdef"><b>Definition</b> Solver.hh:53</div></div>
 <div class="ttc" id="anamespace_i_psolver_html_a9cfbb973ab821211ecc159aeef1330d7"><div class="ttname"><a href="namespace_i_psolver.html#a9cfbb973ab821211ecc159aeef1330d7">IPsolver::Integer</a></div><div class="ttdeci">IPSOLVER_DEFAULT_INTEGER_TYPE Integer</div><div class="ttdoc">The Integer type as used for the API.</div><div class="ttdef"><b>Definition</b> IPsolver.hh:116</div></div>
 </div><!-- fragment --><p><a class="el" href="#a07bb173fc9bb10f1c3c75ee7fab1e27e">Descent</a> direction enumeration </p>
 
 </div>
 </div>
-<a id="ada8d6ea58187e1c7ceb151c13cb9eb94" name="ada8d6ea58187e1c7ceb151c13cb9eb94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada8d6ea58187e1c7ceb151c13cb9eb94">&#9670;&#160;</a></span>LagrangianHessianFunc</h2>
+<a id="a8c33a896b581a8955fdf5f1d9a8f5138" name="a8c33a896b581a8955fdf5f1d9a8f5138"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c33a896b581a8955fdf5f1d9a8f5138">&#9670;&#160;</a></span>LagrangianHessianFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -357,16 +329,15 @@ template&lt;typename Real&gt; </div>
 template&lt;typename Real&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::LagrangianHessianFunc = std::function&lt;<a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a>(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;, const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td>
+          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::LagrangianHessianFunc = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::LagrangianHessianFunc</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Hessian of the Lagrangian function type </p>
 
 </div>
 </div>
-<a id="a6df8f1b1314fc5ad543f9dd73ce7ac08" name="a6df8f1b1314fc5ad543f9dd73ce7ac08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6df8f1b1314fc5ad543f9dd73ce7ac08">&#9670;&#160;</a></span>Mask</h2>
+<a id="a57125337561c872e6bb67e3d7037fa8a" name="a57125337561c872e6bb67e3d7037fa8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57125337561c872e6bb67e3d7037fa8a">&#9670;&#160;</a></span>Matrix</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -374,16 +345,15 @@ template&lt;typename Real&gt; </div>
 template&lt;typename Real&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::Mask = Eigen::Array&lt;bool, Eigen::Dynamic, 1&gt;</td>
+          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::Matrix = typename <a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt;Real&gt;::Matrix</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="#a6df8f1b1314fc5ad543f9dd73ce7ac08">Mask</a> type for Eigen arrays </p>
 
 </div>
 </div>
-<a id="ab10e75668dbe4559dfd3e736f75dab68" name="ab10e75668dbe4559dfd3e736f75dab68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab10e75668dbe4559dfd3e736f75dab68">&#9670;&#160;</a></span>Matrix</h2>
+<a id="a256b7bd6d5ff1943f38e457621c9a0ac" name="a256b7bd6d5ff1943f38e457621c9a0ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a256b7bd6d5ff1943f38e457621c9a0ac">&#9670;&#160;</a></span>ObjectiveFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -391,16 +361,15 @@ template&lt;typename Real&gt; </div>
 template&lt;typename Real&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::Matrix = Eigen::MatrixXd</td>
+          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::ObjectiveFunc = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::ObjectiveFunc</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a> type (Eigen dense dynamic matrix) </p>
 
 </div>
 </div>
-<a id="a953ad1877e476e3ef85ea499079072dc" name="a953ad1877e476e3ef85ea499079072dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a953ad1877e476e3ef85ea499079072dc">&#9670;&#160;</a></span>ObjectiveFunc</h2>
+<a id="a04caab5ee2ef99ae2392867cc8d7f963" name="a04caab5ee2ef99ae2392867cc8d7f963"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04caab5ee2ef99ae2392867cc8d7f963">&#9670;&#160;</a></span>ObjectiveGradientFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -408,16 +377,15 @@ template&lt;typename Real&gt; </div>
 template&lt;typename Real&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::ObjectiveFunc = std::function&lt;Real(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td>
+          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::ObjectiveGradientFunc = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::ObjectiveGradientFunc</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Objective function type </p>
 
 </div>
 </div>
-<a id="a0b48ad9349f8eafd79df10e4fb3ca3ec" name="a0b48ad9349f8eafd79df10e4fb3ca3ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">&#9670;&#160;</a></span>ObjectiveGradientFunc</h2>
+<a id="a98f3cc897c146b8d7cf6fb0b697967f7" name="a98f3cc897c146b8d7cf6fb0b697967f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98f3cc897c146b8d7cf6fb0b697967f7">&#9670;&#160;</a></span>ObjectiveHessianFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -425,16 +393,15 @@ template&lt;typename Real&gt; </div>
 template&lt;typename Real&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::ObjectiveGradientFunc = std::function&lt;<a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td>
+          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::ObjectiveHessianFunc = typename <a class="el" href="class_i_psolver_1_1_problem_wrapper.html">ProblemWrapper</a>&lt;Real&gt;::ObjectiveHessianFunc</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gradient function type </p>
 
 </div>
 </div>
-<a id="afe8bcadd99d428b5ecb3f1cf2f8c300a" name="afe8bcadd99d428b5ecb3f1cf2f8c300a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe8bcadd99d428b5ecb3f1cf2f8c300a">&#9670;&#160;</a></span>ObjectiveHessianFunc</h2>
+<a id="a5168729763676556dd3db98c64e34b82" name="a5168729763676556dd3db98c64e34b82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5168729763676556dd3db98c64e34b82">&#9670;&#160;</a></span>UniquePtr</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -442,16 +409,16 @@ template&lt;typename Real&gt; </div>
 template&lt;typename Real&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::ObjectiveHessianFunc = std::function&lt;<a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a>(const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a>&amp;)&gt;</td>
+          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::UniquePtr = std::unique_ptr&lt;<a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt;Real&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Hessian function type </p>
+<p>Unique pointer to a <a class="el" href="class_i_psolver_1_1_problem.html" title="Problem class for the IPsolver library.">Problem</a> object </p>
 
 </div>
 </div>
-<a id="aac4ca02033f365576ed29b6accf17a9f" name="aac4ca02033f365576ed29b6accf17a9f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac4ca02033f365576ed29b6accf17a9f">&#9670;&#160;</a></span>Vector</h2>
+<a id="aa93c2e5d5b7ba9898eca3d3c9cc022e9" name="aa93c2e5d5b7ba9898eca3d3c9cc022e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">&#9670;&#160;</a></span>Vector</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -459,17 +426,16 @@ template&lt;typename Real&gt; </div>
 template&lt;typename Real&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::Vector = Eigen::VectorXd</td>
+          <td class="memname">using <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::Vector = typename <a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt;Real&gt;::Vector</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> type (Eigen dense dynamic matrix) </p>
 
 </div>
 </div>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a07d328192073f61ab7600deaccdc7361" name="a07d328192073f61ab7600deaccdc7361"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a07d328192073f61ab7600deaccdc7361">&#9670;&#160;</a></span>Solver() <span class="overload">[1/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a07d328192073f61ab7600deaccdc7361">&#9670;&#160;</a></span>Solver() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -497,7 +463,7 @@ template&lt;typename Real&gt; </div>
 </div>
 </div>
 <a id="a27004c1b8546fab369bc3a9efac6b500" name="a27004c1b8546fab369bc3a9efac6b500"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27004c1b8546fab369bc3a9efac6b500">&#9670;&#160;</a></span>Solver() <span class="overload">[2/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a27004c1b8546fab369bc3a9efac6b500">&#9670;&#160;</a></span>Solver() <span class="overload">[2/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -510,27 +476,27 @@ template&lt;typename Real&gt; </div>
         <tr>
           <td class="memname"><a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::Solver </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a953ad1877e476e3ef85ea499079072dc">ObjectiveFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>objective</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a256b7bd6d5ff1943f38e457621c9a0ac">ObjectiveFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>objective</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">ObjectiveGradientFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>objective_gradient</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a04caab5ee2ef99ae2392867cc8d7f963">ObjectiveGradientFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>objective_gradient</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a32722ffcb84ae8a06669fa4ebb2a8d81">ConstraintsFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>constraints</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#af9a640a727f6459a4c0b5ca622ab41c3">ConstraintsFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>constraints</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a92b153a8c25fe466f9407482f99ae233">ConstraintsJacobianFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>constraints_jacobian</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#aee4e6c5e2b0369fae41db5b73867effc">ConstraintsJacobianFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>constraints_jacobian</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#ada8d6ea58187e1c7ceb151c13cb9eb94">LagrangianHessianFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>lagrangian_hessian</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a8c33a896b581a8955fdf5f1d9a8f5138">LagrangianHessianFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>lagrangian_hessian</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -554,7 +520,7 @@ template&lt;typename Real&gt; </div>
 </div>
 </div>
 <a id="a4c3e9d85ab20118e20d0d13f0b9659ce" name="a4c3e9d85ab20118e20d0d13f0b9659ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c3e9d85ab20118e20d0d13f0b9659ce">&#9670;&#160;</a></span>Solver() <span class="overload">[3/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c3e9d85ab20118e20d0d13f0b9659ce">&#9670;&#160;</a></span>Solver() <span class="overload">[3/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -567,32 +533,32 @@ template&lt;typename Real&gt; </div>
         <tr>
           <td class="memname"><a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::Solver </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a953ad1877e476e3ef85ea499079072dc">ObjectiveFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>objective</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a256b7bd6d5ff1943f38e457621c9a0ac">ObjectiveFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>objective</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">ObjectiveGradientFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>objective_gradient</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a04caab5ee2ef99ae2392867cc8d7f963">ObjectiveGradientFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>objective_gradient</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#afe8bcadd99d428b5ecb3f1cf2f8c300a">ObjectiveHessianFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>objective_hessian</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a98f3cc897c146b8d7cf6fb0b697967f7">ObjectiveHessianFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>objective_hessian</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a32722ffcb84ae8a06669fa4ebb2a8d81">ConstraintsFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>constraints</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#af9a640a727f6459a4c0b5ca622ab41c3">ConstraintsFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>constraints</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a92b153a8c25fe466f9407482f99ae233">ConstraintsJacobianFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>constraints_jacobian</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#aee4e6c5e2b0369fae41db5b73867effc">ConstraintsJacobianFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>constraints_jacobian</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#ada8d6ea58187e1c7ceb151c13cb9eb94">LagrangianHessianFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>lagrangian_hessian</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a8c33a896b581a8955fdf5f1d9a8f5138">LagrangianHessianFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>lagrangian_hessian</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -616,8 +582,47 @@ template&lt;typename Real&gt; </div>
 
 </div>
 </div>
+<a id="a5c2e67131144d91c2fa7445c3a52a845" name="a5c2e67131144d91c2fa7445c3a52a845"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c2e67131144d91c2fa7445c3a52a845">&#9670;&#160;</a></span>Solver() <span class="overload">[4/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Real&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::Solver </td>
+          <td>(</td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt; Real &gt; &gt; &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>problem</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a07bb173fc9bb10f1c3c75ee7fab1e27e">Descent</a></td>          <td class="paramname"><span class="paramname"><em>descent</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Descent::NEWTON</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Initializes the solver with the provided unique pointer to a <a class="el" href="class_i_psolver_1_1_problem.html" title="Problem class for the IPsolver library.">Problem</a> object. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">problem</td><td>The unique pointer to the <a class="el" href="class_i_psolver_1_1_problem.html" title="Problem class for the IPsolver library.">Problem</a> object to use. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">descent</td><td>The descent direction method to use (default is Newton). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>The pointer is moved into the solver, so it should not be used after this call. </dd></dl>
+
+</div>
+</div>
 <a id="ac6b2e477735a180c2a0b56cca572dfd6" name="ac6b2e477735a180c2a0b56cca572dfd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac6b2e477735a180c2a0b56cca572dfd6">&#9670;&#160;</a></span>Solver() <span class="overload">[4/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6b2e477735a180c2a0b56cca572dfd6">&#9670;&#160;</a></span>Solver() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -645,7 +650,7 @@ template&lt;typename Real&gt; </div>
 </div>
 </div>
 <a id="a6900fffdbba94dd98b258cb7bc70b633" name="a6900fffdbba94dd98b258cb7bc70b633"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6900fffdbba94dd98b258cb7bc70b633">&#9670;&#160;</a></span>Solver() <span class="overload">[5/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6900fffdbba94dd98b258cb7bc70b633">&#9670;&#160;</a></span>Solver() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -896,19 +901,19 @@ template&lt;typename Real&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::bfgs_update </td>
+          <td class="memname"><a class="el" href="#a57125337561c872e6bb67e3d7037fa8a">Matrix</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::bfgs_update </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#a57125337561c872e6bb67e3d7037fa8a">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -936,128 +941,6 @@ template&lt;typename Real&gt; </div>
 
 </div>
 </div>
-<a id="a9428e0fe0b12d1dddfbc26ee5fea953c" name="a9428e0fe0b12d1dddfbc26ee5fea953c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9428e0fe0b12d1dddfbc26ee5fea953c">&#9670;&#160;</a></span>constraints() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#a32722ffcb84ae8a06669fa4ebb2a8d81">ConstraintsFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::constraints </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The current constraints function. </dd></dl>
-
-</div>
-</div>
-<a id="a905c2ac54c76f1167f36cd4fcc8da332" name="a905c2ac54c76f1167f36cd4fcc8da332"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a905c2ac54c76f1167f36cd4fcc8da332">&#9670;&#160;</a></span>constraints() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::constraints </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#a32722ffcb84ae8a06669fa4ebb2a8d81">ConstraintsFunc</a></td>          <td class="paramname"><span class="paramname"><em>constraints</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This method allows the user to specify the constraints function. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">constraints</td><td>The constraints function to set. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="aa5a764c1489428fe975d26dfe2beaa06" name="aa5a764c1489428fe975d26dfe2beaa06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5a764c1489428fe975d26dfe2beaa06">&#9670;&#160;</a></span>constraints_jacobian() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#a92b153a8c25fe466f9407482f99ae233">ConstraintsJacobianFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::constraints_jacobian </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The current Jacobian of the constraints function. </dd></dl>
-
-</div>
-</div>
-<a id="add7e595ba4bacd5f64cf3079e64d4f50" name="add7e595ba4bacd5f64cf3079e64d4f50"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add7e595ba4bacd5f64cf3079e64d4f50">&#9670;&#160;</a></span>constraints_jacobian() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::constraints_jacobian </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#a92b153a8c25fe466f9407482f99ae233">ConstraintsJacobianFunc</a></td>          <td class="paramname"><span class="paramname"><em>constraints_jacobian</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This method allows the user to specify the Jacobian of the constraints function. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">constraints_jacobian</td><td>The Jacobian of the constraints function to set. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a3cabbcc01c0262fdb4fe59f6bd7dadc5" name="a3cabbcc01c0262fdb4fe59f6bd7dadc5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3cabbcc01c0262fdb4fe59f6bd7dadc5">&#9670;&#160;</a></span>descent() <span class="overload">[1/2]</span></h2>
 
@@ -1082,7 +965,7 @@ template&lt;typename Real&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The current descent direction. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The current descent direction method. </dd></dl>
 
 </div>
 </div>
@@ -1110,9 +993,14 @@ template&lt;typename Real&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>This method allows the user to specify whether to use the Newton method or the BFGS method for computing the descent direction. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>This method allows the user to specify the descent direction method to be used by the solver. The available methods are:</p><ul>
+<li>Descent::NEWTON: Use Newton's method for descent direction.</li>
+<li>Descent::BFGS: Use BFGS method for descent direction.</li>
+<li>Descent::STEEPEST: Use steepest descent method for descent direction.</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">descent</td><td>The descent direction to use. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">descent</td><td>The descent direction method to set. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1255,37 +1143,37 @@ template&lt;typename Real&gt; </div>
         <tr>
           <td class="memname">Real <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::grad_merit </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>z</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>z</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>p_x</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>p_x</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>p_z</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>p_z</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>g</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>g</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>c</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>c</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="#ab10e75668dbe4559dfd3e736f75dab68">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>J</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#a57125337561c872e6bb67e3d7037fa8a">Matrix</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>J</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1313,67 +1201,6 @@ template&lt;typename Real&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The computed directional derivative of the merit function. </dd></dl>
-
-</div>
-</div>
-<a id="aa75f6985b4a4744a7feed835be8caaf6" name="aa75f6985b4a4744a7feed835be8caaf6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa75f6985b4a4744a7feed835be8caaf6">&#9670;&#160;</a></span>lagrangian_hessian() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ada8d6ea58187e1c7ceb151c13cb9eb94">LagrangianHessianFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::lagrangian_hessian </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The current Hessian of the Lagrangian function. </dd></dl>
-
-</div>
-</div>
-<a id="aa8c24c5a6f5093606b872ca2f9d1769e" name="aa8c24c5a6f5093606b872ca2f9d1769e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8c24c5a6f5093606b872ca2f9d1769e">&#9670;&#160;</a></span>lagrangian_hessian() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::lagrangian_hessian </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#ada8d6ea58187e1c7ceb151c13cb9eb94">LagrangianHessianFunc</a></td>          <td class="paramname"><span class="paramname"><em>lagrangian_hessian</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This method allows the user to specify the Hessian of the Lagrangian function. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">lagrangian_hessian</td><td>The Hessian of the Lagrangian function to set. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
@@ -1453,12 +1280,12 @@ template&lt;typename Real&gt; </div>
         <tr>
           <td class="memname">Real <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::merit </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>z</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>z</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1468,7 +1295,7 @@ template&lt;typename Real&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>c</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>c</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1562,189 +1389,6 @@ template&lt;typename Real&gt; </div>
 
 </div>
 </div>
-<a id="af4011af005ea1169a124f37001625964" name="af4011af005ea1169a124f37001625964"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af4011af005ea1169a124f37001625964">&#9670;&#160;</a></span>objective() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#a953ad1877e476e3ef85ea499079072dc">ObjectiveFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::objective </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The current objective function. </dd></dl>
-
-</div>
-</div>
-<a id="a2d73a9b8b5410327a2510cbb2329d298" name="a2d73a9b8b5410327a2510cbb2329d298"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d73a9b8b5410327a2510cbb2329d298">&#9670;&#160;</a></span>objective() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::objective </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#a953ad1877e476e3ef85ea499079072dc">ObjectiveFunc</a></td>          <td class="paramname"><span class="paramname"><em>objective</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This method allows the user to specify the objective function to be minimized. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">objective</td><td>The objective function to set. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a330bd27dc2125b1c380de0b8f31470d1" name="a330bd27dc2125b1c380de0b8f31470d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a330bd27dc2125b1c380de0b8f31470d1">&#9670;&#160;</a></span>objective_gradient() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">ObjectiveGradientFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::objective_gradient </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The current gradient of the objective function. </dd></dl>
-
-</div>
-</div>
-<a id="abfbcc277d52726e8cbc59157f94dc9cb" name="abfbcc277d52726e8cbc59157f94dc9cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abfbcc277d52726e8cbc59157f94dc9cb">&#9670;&#160;</a></span>objective_gradient() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::objective_gradient </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">ObjectiveGradientFunc</a></td>          <td class="paramname"><span class="paramname"><em>objective_gradient</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This method allows the user to specify the gradient of the objective function. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">objective_gradient</td><td>The gradient of the objective function to set. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a6fc7b447162946218d93804854ca0b82" name="a6fc7b447162946218d93804854ca0b82"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6fc7b447162946218d93804854ca0b82">&#9670;&#160;</a></span>objective_hessian() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#afe8bcadd99d428b5ecb3f1cf2f8c300a">ObjectiveHessianFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::objective_hessian </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The current Hessian of the objective function. </dd></dl>
-
-</div>
-</div>
-<a id="ae8ec7f6d4719a7e0222809f7582b665a" name="ae8ec7f6d4719a7e0222809f7582b665a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8ec7f6d4719a7e0222809f7582b665a">&#9670;&#160;</a></span>objective_hessian() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::objective_hessian </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#afe8bcadd99d428b5ecb3f1cf2f8c300a">ObjectiveHessianFunc</a></td>          <td class="paramname"><span class="paramname"><em>objective_hessian</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This method allows the user to specify the Hessian of the objective function. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">objective_hessian</td><td>The Hessian of the objective function to set. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a6664e8fcf4fd1b96d022590a9a05ecee" name="a6664e8fcf4fd1b96d022590a9a05ecee"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6664e8fcf4fd1b96d022590a9a05ecee">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
 
@@ -1798,6 +1442,100 @@ template&lt;typename Real&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>This class is not movable. </p>
+
+</div>
+</div>
+<a id="ac85ba7a887031c20bc48281dacd16887" name="ac85ba7a887031c20bc48281dacd16887"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac85ba7a887031c20bc48281dacd16887">&#9670;&#160;</a></span>problem() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Real&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt; Real &gt; const  &amp; <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::problem </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>A reference to the current problem. </dd></dl>
+
+</div>
+</div>
+<a id="a28339343536640293164bf6138228146" name="a28339343536640293164bf6138228146"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28339343536640293164bf6138228146">&#9670;&#160;</a></span>problem() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Real&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::problem </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt; Real &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>problem</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method allows the user to specify the problem to be solved. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">problem</td><td>The problem to set. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae051f608de37918bde556dc02e911c3b" name="ae051f608de37918bde556dc02e911c3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae051f608de37918bde556dc02e911c3b">&#9670;&#160;</a></span>problem() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Real&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::problem </td>
+          <td>(</td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt; Real &gt; &gt; &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>problem</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method allows the user to specify the problem to be solved using a unique pointer. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">problem</td><td>The unique pointer to the problem to set. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1862,8 +1600,8 @@ template&lt;typename Real&gt; </div>
 
 </div>
 </div>
-<a id="a59a25a07232dd604132b3ed8451a4408" name="a59a25a07232dd604132b3ed8451a4408"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a59a25a07232dd604132b3ed8451a4408">&#9670;&#160;</a></span>solve()</h2>
+<a id="aa51ed68e49be126c8f3f6bfab280e014" name="aa51ed68e49be126c8f3f6bfab280e014"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa51ed68e49be126c8f3f6bfab280e014">&#9670;&#160;</a></span>solve()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1874,10 +1612,14 @@ template&lt;typename Real&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::solve </td>
+          <td class="memname">bool <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::solve </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#aac4ca02033f365576ed29b6accf17a9f">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>x_guess</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>x_guess</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="#aa93c2e5d5b7ba9898eca3d3c9cc022e9">Vector</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>x_sol</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1889,10 +1631,11 @@ template&lt;typename Real&gt; </div>
 <p>This method implements the interior-point algorithm to solve the optimization problem defined by the objective function, constraints, and their respective gradients and Jacobians. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">x_guess</td><td>Initial guess for the optimization variables. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">x_sol</td><td>Solution vector. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The optimal solution vector. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the optimization was successful, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -1957,8 +1700,36 @@ template&lt;typename Real&gt; </div>
 
 </div>
 </div>
+<a id="a80b3872c6eaee92233b83df4435c2aad" name="a80b3872c6eaee92233b83df4435c2aad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80b3872c6eaee92233b83df4435c2aad">&#9670;&#160;</a></span>tolerance() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Real&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Real <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::tolerance </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>The current tolerance for convergence. </dd></dl>
+
+</div>
+</div>
 <a id="a5d6ae25717b882882c5b280ce663e1a0" name="a5d6ae25717b882882c5b280ce663e1a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d6ae25717b882882c5b280ce663e1a0">&#9670;&#160;</a></span>tolerance()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d6ae25717b882882c5b280ce663e1a0">&#9670;&#160;</a></span>tolerance() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1985,67 +1756,6 @@ template&lt;typename Real&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">tolerance</td><td>The convergence tolerance. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a83add35204780de82d77c22ded1f82a0" name="a83add35204780de82d77c22ded1f82a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83add35204780de82d77c22ded1f82a0">&#9670;&#160;</a></span>verbose() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::verbose </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The current verbosity setting. </dd></dl>
-
-</div>
-</div>
-<a id="a993566d2a9e8b65eeb65832f1f56e0e7" name="a993566d2a9e8b65eeb65832f1f56e0e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a993566d2a9e8b65eeb65832f1f56e0e7">&#9670;&#160;</a></span>verbose() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::verbose </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>verbose</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This method allows the user to enable or disable verbose output during the solving process. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">verbose</td><td>If true, enables verbose output; otherwise, disables it. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2128,56 +1838,6 @@ template&lt;typename Real&gt; </div>
 
 </div>
 </div>
-<a id="af1f92977f76265e570660fa69777d02c" name="af1f92977f76265e570660fa69777d02c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1f92977f76265e570660fa69777d02c">&#9670;&#160;</a></span>m_constraints</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#a32722ffcb84ae8a06669fa4ebb2a8d81">ConstraintsFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::m_constraints {nullptr}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Constraints function \( g(\mathbf{x}) \) </p>
-
-</div>
-</div>
-<a id="ab7c7de175c89fc23b542ce4a48c974ad" name="ab7c7de175c89fc23b542ce4a48c974ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7c7de175c89fc23b542ce4a48c974ad">&#9670;&#160;</a></span>m_constraints_jacobian</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#a92b153a8c25fe466f9407482f99ae233">ConstraintsJacobianFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::m_constraints_jacobian {nullptr}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Jacobian of the constraints \( J(\mathbf{x}) \) </p>
-
-</div>
-</div>
 <a id="acbad3d62e60d4771986babe26f92eb8a" name="acbad3d62e60d4771986babe26f92eb8a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acbad3d62e60d4771986babe26f92eb8a">&#9670;&#160;</a></span>m_descent</h2>
 
@@ -2253,31 +1913,6 @@ template&lt;typename Real&gt; </div>
 
 </div>
 </div>
-<a id="a3569241702f64a2837d0a1821aaeee89" name="a3569241702f64a2837d0a1821aaeee89"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3569241702f64a2837d0a1821aaeee89">&#9670;&#160;</a></span>m_lagrangian_hessian</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#ada8d6ea58187e1c7ceb151c13cb9eb94">LagrangianHessianFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::m_lagrangian_hessian {nullptr}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Hessian of the Lagrangian \( W(\mathbf{x}, \mathbf{z}) \) </p>
-
-</div>
-</div>
 <a id="a8b98a9854bd7b032b6ad897028308145" name="a8b98a9854bd7b032b6ad897028308145"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8b98a9854bd7b032b6ad897028308145">&#9670;&#160;</a></span>m_max_iterations</h2>
 
@@ -2328,8 +1963,8 @@ template&lt;typename Real&gt; </div>
 
 </div>
 </div>
-<a id="ac87601dcd973f07e41f571606e831c3e" name="ac87601dcd973f07e41f571606e831c3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac87601dcd973f07e41f571606e831c3e">&#9670;&#160;</a></span>m_objective</h2>
+<a id="a462ee930675224cc7f0179fea564732a" name="a462ee930675224cc7f0179fea564732a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a462ee930675224cc7f0179fea564732a">&#9670;&#160;</a></span>m_problem</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2340,7 +1975,7 @@ template&lt;typename Real&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a953ad1877e476e3ef85ea499079072dc">ObjectiveFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::m_objective {nullptr}</td>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="class_i_psolver_1_1_problem.html">Problem</a>&lt;Real&gt; &gt; <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::m_problem</td>
         </tr>
       </table>
   </td>
@@ -2349,57 +1984,7 @@ template&lt;typename Real&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Objective function \( f(\mathbf{x}) \) </p>
-
-</div>
-</div>
-<a id="a9d432742823dae3e653631f5f999f67e" name="a9d432742823dae3e653631f5f999f67e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d432742823dae3e653631f5f999f67e">&#9670;&#160;</a></span>m_objective_gradient</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#a0b48ad9349f8eafd79df10e4fb3ca3ec">ObjectiveGradientFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::m_objective_gradient {nullptr}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Gradient of the objective function \( \nabla f(\mathbf{x}) \) </p>
-
-</div>
-</div>
-<a id="adb4457f0808bd99899912becb7209fb2" name="adb4457f0808bd99899912becb7209fb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb4457f0808bd99899912becb7209fb2">&#9670;&#160;</a></span>m_objective_hessian</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#afe8bcadd99d428b5ecb3f1cf2f8c300a">ObjectiveHessianFunc</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::m_objective_hessian {nullptr}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Hessian of the objective function \( \nabla^2 f(\mathbf{x}) \) </p>
+<p><a class="el" href="class_i_psolver_1_1_problem.html" title="Problem class for the IPsolver library.">Problem</a> object </p>
 
 </div>
 </div>
@@ -2475,31 +2060,6 @@ template&lt;typename Real&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Tolerance for convergence </p>
-
-</div>
-</div>
-<a id="a9c5443ce4cbbd29ae4187ba4663b096a" name="a9c5443ce4cbbd29ae4187ba4663b096a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c5443ce4cbbd29ae4187ba4663b096a">&#9670;&#160;</a></span>m_verbose</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Real&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real &gt;::m_verbose {false}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Verbose output </p>
 
 </div>
 </div>

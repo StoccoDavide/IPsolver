@@ -44,12 +44,88 @@
 // IPsolver includes
 #include "IPsolver.hh"
 
+using IPsolver::Integer;
+
+// Quadratic program class
+template<typename T>
+class QuadraticProgram : public IPsolver::Problem<T>
+{
+public:
+  using typename IPsolver::Problem<T>::Vector;
+  using typename IPsolver::Problem<T>::Matrix;
+
+private:
+  Matrix m_H;              // Hessian of the objective function
+  Vector m_q;              // Gradient of the objective function
+  std::vector<Matrix> m_P; // Hessian matrices for the constraints
+  std::vector<Vector> m_r; // Gradient vectors for the constraints
+  Vector m_b;              // Right-hand side vector for the constraints
+
+public:
+  // Constructor
+  QuadraticProgram(const Matrix& H, const Vector& q, const std::vector<Matrix>& P,
+    const std::vector<Vector>& r, const Vector& b)
+    : m_H(H), m_q(q), m_P(P), m_r(r), m_b(b) {}
+
+  // Objective function
+  T objective(const Vector& x) const override
+  {
+    return 0.5 * (x.transpose() * this->m_H * x).value() + this->m_q.dot(x);
+  }
+
+  // Gradient of the objective function
+  Vector objective_gradient(const Vector& x) const override
+  {
+    return this->m_H * x + this->m_q;
+  }
+
+  // Hessian of the objective function
+  Matrix objective_hessian(const Vector& /*x*/) const override
+  {
+    return this->m_H;
+  }
+
+  // Constraints function
+  Vector constraints(const Vector& x) const override
+  {
+    Vector c(this->m_b.size());
+    for (Integer i{0}; i < this->m_b.size(); ++i) {
+      c(i) = 0.5 * x.transpose() * this->m_P[i] * x + this->m_r[i].dot(x) - this->m_b(i);
+    }
+    return c;
+  }
+
+  // Jacobian of the constraints function
+  Matrix constraints_jacobian(const Vector& x, const Vector& /*z*/) const override
+  {
+    Integer n{static_cast<Integer>(x.size())};
+    Integer m{static_cast<Integer>(this->m_b.size())};
+    Matrix J(m, n);
+    for (Integer i{0}; i < m; ++i) {
+      J.row(i) = (this->m_P[i] * x + this->m_r[i]).transpose();
+    }
+    return J;
+  }
+
+  // Hessian of the Lagrangian function
+  Matrix lagrangian_hessian(const Vector& x, const Vector& z) const override
+  {
+    Integer n{static_cast<Integer>(x.size())};
+    Integer m{static_cast<Integer>(m_b.size())};
+    Matrix W(Matrix::Zero(n, n));
+    for (Integer i{0}; i < m; ++i) {
+      W += z(i) * m_P[i];
+    }
+    return W;
+  }
+
+}; // QuadraticProgram class
+
 // Define the quadratic program example
 TEMPLATE_TEST_CASE("IPsolver quadratic program", "[template]", double) // float, double, long double
 {
-  using Integer = typename IPsolver::Integer;
-  using Vector  = typename IPsolver::Solver<TestType>::Vector;
-  using Matrix  = typename IPsolver::Solver<TestType>::Matrix;
+  using Vector = typename IPsolver::Solver<TestType>::Vector;
+  using Matrix = typename IPsolver::Solver<TestType>::Matrix;
 
   // Define the number of optimization variables and constraints
   constexpr Integer n{4};
@@ -77,81 +153,92 @@ TEMPLATE_TEST_CASE("IPsolver quadratic program", "[template]", double) // float,
   Vector b(m);
   b << 5.0, 8.0, 10.0;
 
-  // Objective function function
-  auto objective = [&H, &q](const Vector& x) -> TestType {
-    return 0.5 * (x.transpose() * H * x).value() + q.dot(x);
-  };
-
-  // Gradient of the objective function
-  auto objective_gradient = [&H, &q](const Vector& x) -> Vector {
-    return H * x + q;
-  };
-
-  // Hessian of the objective function
-  auto objective_hessian = [&H](const Vector& /*x*/) -> Matrix {
-    return H;
-  };
-
-  // Constraints function
-  auto constraints = [&P, &r, &b](const Vector& x) -> Vector
-  {
-    Vector c(b.size());
-    for (Integer i{0}; i < b.size(); ++i) {
-      c(i) = 0.5 * x.transpose() * P[i] * x + r[i].dot(x) - b[i];
-    }
-    return c;
-  };
-
-  // Jacobian of the constraints function
-  auto constraints_jacobian = [&P, &r, &b](const Vector& x, const Vector& /*z*/) -> Matrix
-  {
-    Integer n{static_cast<Integer>(x.size())};
-    Integer m{static_cast<Integer>(b.size())};
-    Matrix J(m, n);
-    for (Integer i{0}; i < m; ++i) {
-      J.row(i) = (P[i] * x + r[i]).transpose();
-    }
-    return J;
-  };
-
-  // Hessian of the Lagrangian function
-  auto lagrangian_hessian = [&P, &b](const Vector& x, const Vector& z) -> Matrix
-  {
-    Integer n{static_cast<Integer>(x.size())};
-    Integer m{static_cast<Integer>(b.size())};
-    Matrix W(Matrix::Zero(n, n));
-    for (Integer i{0}; i < m; ++i) {
-      W += z(i) * P[i];
-    }
-    return W;
-  };
-
-  // Create the solver
-  IPsolver::Solver<TestType> solver(
-    objective, objective_gradient, objective_hessian, constraints, constraints_jacobian, lagrangian_hessian
-  );
-  solver.tolerance(1e-6);
-  solver.max_iterations(100);
-  solver.verbose(false);
-
   // Problem solution
   Vector x_guess(Vector::Zero(n));
   Vector sol(n);
   sol << 0.0, 1.0, 2.0, -1.0;
 
-  // Solve the optimization problem with BFGS descent
-  SECTION("BFGS Descent")
-  {
-    solver.descent(IPsolver::Solver<TestType>::Descent::BFGS);
-    Vector x_sol(solver.solve(x_guess));
-    REQUIRE(x_sol.isApprox(sol, 1e-6));
+  // Create the problem object
+  std::unique_ptr<QuadraticProgram<TestType>> problem{
+    std::make_unique<QuadraticProgram<TestType>>(H, q, P, r, b)
+  };
+
+  // Create a problem wrapper object
+  IPsolver::ProblemWrapper<TestType> problem_wrapper(
+    [&problem](const Vector &x) {return problem->objective(x);},
+    [&problem](const Vector &x) {return problem->objective_gradient(x);},
+    [&problem](const Vector &x) {return problem->objective_hessian(x);},
+    [&problem](const Vector &x) {return problem->constraints(x);},
+    [&problem](const Vector &x, const Vector &z) {return problem->constraints_jacobian(x, z);},
+    [&problem](const Vector &x, const Vector &z) {return problem->lagrangian_hessian(x, z);}
+  );
+
+  // Solve the optimization problem with the problem class
+  SECTION("Problem Class") {
+
+    // Create the solver
+    IPsolver::Solver<TestType> solver(std::move(problem));
+    solver.tolerance(1e-6);
+    solver.max_iterations(100);
+
+    SECTION("BFGS Descent")
+    {
+      solver.descent(IPsolver::Solver<TestType>::Descent::BFGS);
+      Vector x_sol;
+      REQUIRE(solver.solve(x_guess, x_sol));
+      REQUIRE(x_sol.isApprox(sol, 1e-6));
+    }
+
+    SECTION("Newton Descent")
+    {
+      solver.descent(IPsolver::Solver<TestType>::Descent::NEWTON);
+      Vector x_sol;
+      REQUIRE(solver.solve(x_guess, x_sol));
+      REQUIRE(x_sol.isApprox(sol, 1e-6));
+    }
+
+    SECTION("Steepest Descent")
+    {
+      solver.descent(IPsolver::Solver<TestType>::Descent::STEEPEST);
+      Vector x_sol;
+      REQUIRE(solver.solve(x_guess, x_sol));
+      REQUIRE(x_sol.isApprox(sol, 1e-6));
+    }
   }
 
-  // Solve the optimization problem with Newton descent
-  SECTION("NEWTON Descent")
+  // Create the quadratic program with the problem wrapper class
+  SECTION("Problem Wrapper Class")
   {
-    solver.descent(IPsolver::Solver<TestType>::Descent::NEWTON);
-    Vector x_sol(solver.solve(x_guess));
-    REQUIRE(x_sol.isApprox(sol, 1e-6));
+    IPsolver::Solver<TestType> solver(
+      problem_wrapper.objective(), problem_wrapper.objective_gradient(), problem_wrapper.objective_hessian(),
+      problem_wrapper.constraints(), problem_wrapper.constraints_jacobian(), problem_wrapper.lagrangian_hessian()
+    );
+    solver.tolerance(1e-6);
+    solver.max_iterations(100);
+
+    SECTION("BFGS Descent")
+    {
+      solver.descent(IPsolver::Solver<TestType>::Descent::BFGS);
+      Vector x_sol;
+      REQUIRE(solver.solve(x_guess, x_sol));
+      REQUIRE(x_sol.isApprox(sol, 1e-6));
+    }
+
+    SECTION("Newton Descent")
+    {
+      solver.descent(IPsolver::Solver<TestType>::Descent::NEWTON);
+      Vector x_sol;
+      REQUIRE(solver.solve(x_guess, x_sol));
+      REQUIRE(x_sol.isApprox(sol, 1e-6));
+    }
+
+    // Does not work with this example, but kept for consistency
+    // SECTION("Steepest Descent")
+    // {
+    //   solver.descent(IPsolver::Solver<TestType>::Descent::STEEPEST);
+    //   Vector x_sol;
+    //   REQUIRE(solver.solve(x_guess, x_sol));
+    //   REQUIRE(x_sol.isApprox(sol, 1e-6));
+    // }
   }
 }

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['solver_2ehh_0',['Solver.hh',['../_solver_8hh.html',1,'']]]
+  ['problem_2ehh_0',['Problem.hh',['../_problem_8hh.html',1,'']]]
 ];

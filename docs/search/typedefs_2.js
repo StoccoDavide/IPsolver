@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['descent_0',['Descent',['../class_i_psolver_1_1_solver.html#a07bb173fc9bb10f1c3c75ee7fab1e27e',1,'IPsolver::Solver']]]
+  ['integer_0',['Integer',['../namespace_i_psolver.html#a9cfbb973ab821211ecc159aeef1330d7',1,'IPsolver']]]
 ];

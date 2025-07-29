@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['integer_0',['Integer',['../namespace_i_psolver.html#a9cfbb973ab821211ecc159aeef1330d7',1,'IPsolver']]]
+  ['lagrangianhessianfunc_0',['LagrangianHessianFunc',['../class_i_psolver_1_1_problem_wrapper.html#a21452ec33299b2730c9dd45b16f5678c',1,'IPsolver::ProblemWrapper::LagrangianHessianFunc'],['../class_i_psolver_1_1_solver.html#a8c33a896b581a8955fdf5f1d9a8f5138',1,'IPsolver::Solver::LagrangianHessianFunc']]]
 ];
