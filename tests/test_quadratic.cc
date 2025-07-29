@@ -122,7 +122,7 @@ public:
 }; // QuadraticProgram class
 
 // Define the quadratic program example
-TEMPLATE_TEST_CASE("IPsolver quadratic program", "[template]", double) // float, double, long double
+TEMPLATE_TEST_CASE("Quadratic program", "[template]", double) // float, double, long double
 {
   using Vector = typename IPsolver::Solver<TestType>::Vector;
   using Matrix = typename IPsolver::Solver<TestType>::Matrix;
@@ -176,7 +176,6 @@ TEMPLATE_TEST_CASE("IPsolver quadratic program", "[template]", double) // float,
   // Solve the optimization problem with the problem class
   SECTION("Problem Class") {
 
-    // Create the solver
     IPsolver::Solver<TestType> solver(std::move(problem));
     solver.tolerance(1e-6);
     solver.max_iterations(100);
@@ -232,13 +231,12 @@ TEMPLATE_TEST_CASE("IPsolver quadratic program", "[template]", double) // float,
       REQUIRE(x_sol.isApprox(sol, 1e-6));
     }
 
-    // Does not work with this example, but kept for consistency
-    // SECTION("Steepest Descent")
-    // {
-    //   solver.descent(IPsolver::Solver<TestType>::Descent::STEEPEST);
-    //   Vector x_sol;
-    //   REQUIRE(solver.solve(x_guess, x_sol));
-    //   REQUIRE(x_sol.isApprox(sol, 1e-6));
-    // }
+    SECTION("Steepest Descent")
+    {
+      solver.descent(IPsolver::Solver<TestType>::Descent::STEEPEST);
+      Vector x_sol;
+      REQUIRE(solver.solve(x_guess, x_sol));
+      REQUIRE(x_sol.isApprox(sol, 1e-6));
+    }
   }
 }

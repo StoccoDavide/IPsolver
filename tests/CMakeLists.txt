@@ -10,9 +10,13 @@
 
 include(IPsolverCatch2)
 
-file(GLOB_RECURSE TEST_QPROG "${CMAKE_CURRENT_SOURCE_DIR}/test_qprog.cc")
-add_executable(test_qprog ${TEST_QPROG})
-target_link_libraries(test_qprog PRIVATE IPsolver Catch2::Catch2WithMain)
+file(GLOB_RECURSE TEST_LINEAR "${CMAKE_CURRENT_SOURCE_DIR}/test_linear.cc")
+add_executable(test_linear ${TEST_LINEAR})
+target_link_libraries(test_linear PRIVATE IPsolver Catch2::Catch2WithMain)
+
+file(GLOB_RECURSE TEST_QUADRATIC "${CMAKE_CURRENT_SOURCE_DIR}/test_quadratic.cc")
+add_executable(test_quadratic ${TEST_QUADRATIC})
+target_link_libraries(test_quadratic PRIVATE IPsolver Catch2::Catch2WithMain)
 
 file(GLOB_RECURSE TEST_LOGISTIC "${CMAKE_CURRENT_SOURCE_DIR}/test_logistic.cc")
 add_executable(test_logistic ${TEST_LOGISTIC})
