@@ -35,7 +35,7 @@ fetchcontent_makeavailable(IPsolver)
 target_link_libraries(your_target PRIVATE IPsolver::IPsolver)
 ```
 
-If you already have `IPsolver` somewhere on your system, you can use `find_pacakge` directly.
+If you already have `IPsolver` somewhere on your system, you can use `find_package` directly.
 
 ```cmake
 # Optionally specify a custom path to find content from
