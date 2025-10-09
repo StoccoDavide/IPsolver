@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['max_5fiterations_0',['max_iterations',['../class_i_psolver_1_1_solver.html#ad845c2d228c5e730d7a801f5b3e3d453',1,'IPsolver::Solver::max_iterations(Integer max_iterations)'],['../class_i_psolver_1_1_solver.html#ae6a4afc78765c5e1d71ede8a31f64c17',1,'IPsolver::Solver::max_iterations() const']]],
-  ['merit_1',['merit',['../class_i_psolver_1_1_solver.html#ad9480de5dcf5960835cdcc930aa21b7d',1,'IPsolver::Solver']]],
-  ['mu_5fmin_2',['mu_min',['../class_i_psolver_1_1_solver.html#a4363575682ba5cb7d86dfc65e2c872e6',1,'IPsolver::Solver::mu_min(Real mu_min)'],['../class_i_psolver_1_1_solver.html#a176452502fd956d236fe63bcf4d2f96c',1,'IPsolver::Solver::mu_min() const']]]
+  ['max_5fiterations_0',['max_iterations',['../class_i_psolver_1_1_solver.html#a17fdcef711d8fd04ba2d241895fe7350',1,'IPsolver::Solver::max_iterations(Integer max_iterations)'],['../class_i_psolver_1_1_solver.html#a26a0aeedaa2244b5cf0554dad6d8ef4b',1,'IPsolver::Solver::max_iterations() const']]],
+  ['merit_1',['merit',['../class_i_psolver_1_1_solver.html#ab932f1a04605de9313b16388e70ff6e6',1,'IPsolver::Solver']]],
+  ['mu_5fmin_2',['mu_min',['../class_i_psolver_1_1_solver.html#a22eef97e39e9d7873b6ff9946b9ebfd8',1,'IPsolver::Solver::mu_min(Real mu_min)'],['../class_i_psolver_1_1_solver.html#a70cde9629e4c12afcc5803aba126904b',1,'IPsolver::Solver::mu_min() const']]]
 ];

@@ -43,6 +43,7 @@
 
 using IPsolver::Integer;
 
+constexpr bool VERBOSE{true};
 constexpr double SOLVER_TOLERANCE{5.0e-5};
 constexpr double APPROX_TOLERANCE{1.0e-4};
 constexpr Integer MAX_ITERATIONS{100};
@@ -64,15 +65,45 @@ private:
   VectorM m_b;
 
 public:
+  // Constructor
   QuadraticProgram(MatrixH const & Q, VectorN const & c, MatrixJ const & A, VectorM const & b)
     : m_Q(Q), m_c(c), m_A(A), m_b(b) {}
 
-  Real objective(VectorN const & x) const override { return 0.5 * x.dot(m_Q * x) + m_c.dot(x); }
-  VectorN objective_gradient(VectorN const & x) const override { return m_Q * x + m_c; }
-  MatrixH objective_hessian(VectorN const & /*x*/) const override { return m_Q; }
-  VectorM constraints(VectorN const & x) const override { return m_A * x - m_b; }
-  MatrixJ constraints_jacobian(VectorN const & /*x*/, VectorM const & /*z*/) const override { return m_A; }
-  MatrixH lagrangian_hessian(VectorN const & /*x*/, VectorM const & /*z*/) const override { return m_Q; }
+  // Objective function
+  Real objective(VectorN const & x) const override
+  {
+    return 0.5 * x.dot(m_Q * x) + m_c.dot(x);
+  }
+
+  // Gradient of the objective function
+  VectorN objective_gradient(VectorN const & x) const override
+  {
+    return m_Q * x + m_c;
+  }
+
+  // Hessian of the objective function
+  MatrixH objective_hessian(VectorN const & /*x*/) const override
+  {
+    return m_Q;
+  }
+
+  // Constraints function
+  VectorM constraints(VectorN const & x) const override
+  {
+    return m_A * x - m_b;
+  }
+
+  // Jacobian of the constraints function
+  MatrixJ constraints_jacobian(VectorN const & /*x*/, VectorM const & /*z*/) const override
+  {
+    return m_A;
+  }
+
+  // Hessian of the Lagrangian function
+  MatrixH lagrangian_hessian(VectorN const & /*x*/, VectorM const & /*z*/) const override
+  {
+    return m_Q;
+  }
 };
 
 // Test fixture for IPsolver with QuadraticProgram
@@ -112,10 +143,11 @@ protected:
 };
 
 TEST_F(LinearRegression, DISABLED_Problem_BFGS) {
-  IPsolver::Solver<double, NType, MType> solver(std::move(problem));
+  IPsolver::Solver<TestType, NType, MType> solver(std::move(problem));
+  solver.verbose_mode(VERBOSE);
   solver.tolerance(SOLVER_TOLERANCE);
   solver.max_iterations(MAX_ITERATIONS);
-  solver.descent(IPsolver::Solver<double, NType, MType>::Descent::BFGS);
+  solver.descent(IPsolver::Solver<TestType, NType, MType>::Descent::BFGS);
 
   VectorN x_sol;
   EXPECT_TRUE(solver.solve(x_guess, x_sol));
@@ -123,10 +155,11 @@ TEST_F(LinearRegression, DISABLED_Problem_BFGS) {
 }
 
 TEST_F(LinearRegression, DISABLED_Problem_Newton) {
-  IPsolver::Solver<double, NType, MType> solver(std::move(problem));
+  IPsolver::Solver<TestType, NType, MType> solver(std::move(problem));
+  solver.verbose_mode(VERBOSE);
   solver.tolerance(SOLVER_TOLERANCE);
   solver.max_iterations(MAX_ITERATIONS);
-  solver.descent(IPsolver::Solver<double, NType, MType>::Descent::NEWTON);
+  solver.descent(IPsolver::Solver<TestType, NType, MType>::Descent::NEWTON);
 
   VectorN x_sol;
   EXPECT_TRUE(solver.solve(x_guess, x_sol));
@@ -134,10 +167,11 @@ TEST_F(LinearRegression, DISABLED_Problem_Newton) {
 }
 
 TEST_F(LinearRegression, Problem_Steepest) {
-  IPsolver::Solver<double, NType, MType> solver(std::move(problem));
+  IPsolver::Solver<TestType, NType, MType> solver(std::move(problem));
+  solver.verbose_mode(VERBOSE);
   solver.tolerance(SOLVER_TOLERANCE);
   solver.max_iterations(MAX_ITERATIONS);
-  solver.descent(IPsolver::Solver<double, NType, MType>::Descent::STEEPEST);
+  solver.descent(IPsolver::Solver<TestType, NType, MType>::Descent::STEEPEST);
 
   VectorN x_sol;
   EXPECT_TRUE(solver.solve(x_guess, x_sol));
@@ -146,18 +180,19 @@ TEST_F(LinearRegression, Problem_Steepest) {
 
 TEST_F(LinearRegression, DISABLED_ProblemWrapper_BFGS) {
   IPsolver::ProblemWrapper<TestType, NType, MType> problem_wrapper(
-    [this] (const VectorN & x) {return problem->objective(x);},
-    [this] (const VectorN & x) {return problem->objective_gradient(x);},
-    [this] (const VectorN & x) {return problem->objective_hessian(x);},
-    [this] (const VectorN & x) {return problem->constraints(x);},
-    [this] (const VectorN & x, const VectorM & z) {return problem->constraints_jacobian(x, z);},
-    [this] (const VectorN & x, const VectorM & z) {return problem->lagrangian_hessian(x, z);}
+    [this] (const VectorN & x) {return this->problem->objective(x);},
+    [this] (const VectorN & x) {return this->problem->objective_gradient(x);},
+    [this] (const VectorN & x) {return this->problem->objective_hessian(x);},
+    [this] (const VectorN & x) {return this->problem->constraints(x);},
+    [this] (const VectorN & x, const VectorM & z) {return this->problem->constraints_jacobian(x, z);},
+    [this] (const VectorN & x, const VectorM & z) {return this->problem->lagrangian_hessian(x, z);}
   );
 
   IPsolver::Solver<TestType, NType, MType> solver(
     problem_wrapper.objective(), problem_wrapper.objective_gradient(), problem_wrapper.objective_hessian(),
     problem_wrapper.constraints(), problem_wrapper.constraints_jacobian(), problem_wrapper.lagrangian_hessian()
   );
+  solver.verbose_mode(VERBOSE);
   solver.tolerance(SOLVER_TOLERANCE);
   solver.max_iterations(MAX_ITERATIONS);
   solver.descent(IPsolver::Solver<TestType, NType, MType>::Descent::BFGS);
@@ -180,6 +215,7 @@ TEST_F(LinearRegression, DISABLED_ProblemWrapper_Newton) {
     problem_wrapper.objective(), problem_wrapper.objective_gradient(), problem_wrapper.objective_hessian(),
     problem_wrapper.constraints(), problem_wrapper.constraints_jacobian(), problem_wrapper.lagrangian_hessian()
   );
+  solver.verbose_mode(VERBOSE);
   solver.tolerance(SOLVER_TOLERANCE);
   solver.max_iterations(MAX_ITERATIONS);
   solver.descent(IPsolver::Solver<TestType, NType, MType>::Descent::NEWTON);
@@ -202,16 +238,11 @@ TEST_F(LinearRegression, ProblemWrapper_Steepest) {
     problem_wrapper.objective(), problem_wrapper.objective_gradient(), problem_wrapper.objective_hessian(),
     problem_wrapper.constraints(), problem_wrapper.constraints_jacobian(), problem_wrapper.lagrangian_hessian()
   );
+  solver.verbose_mode(VERBOSE);
   solver.tolerance(SOLVER_TOLERANCE);
   solver.max_iterations(MAX_ITERATIONS);
   solver.descent(IPsolver::Solver<TestType, NType, MType>::Descent::STEEPEST);
   VectorN x_sol;
   EXPECT_TRUE(solver.solve(x_guess, x_sol));
   EXPECT_TRUE(x_sol.isApprox(sol, APPROX_TOLERANCE));
-}
-
-// main only runs the tests
-int main(int argc, char **argv) {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

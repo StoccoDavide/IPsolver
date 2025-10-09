@@ -35,217 +35,183 @@
 // STL includes
 #include <random>
 
-// Catch2 library
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/generators/catch_generators_range.hpp>
-#include <catch2/catch_template_test_macros.hpp>
+// GTest library
+#include <gtest/gtest.h>
 
 // IPsolver includes
 #include "IPsolver.hh"
 
 using IPsolver::Integer;
 
+constexpr bool VERBOSE{true};
+constexpr double SOLVER_TOLERANCE{1.0e-6};
+constexpr Integer MAX_ITERATIONS{100};
+
 // Logistic regression class
-template<typename T>
-class LogisticRegression : public IPsolver::Problem<T>
+template<typename Real, int N, int M, int D>
+class LogisticRegression : public IPsolver::Problem<Real, N, M>
 {
 public:
-  using typename IPsolver::Problem<T>::Vector;
-  using typename IPsolver::Problem<T>::Matrix;
+  using typename IPsolver::Problem<Real, N, M>::VectorN;
+  using typename IPsolver::Problem<Real, N, M>::VectorM;
+  using typename IPsolver::Problem<Real, N, M>::MatrixH;
+  using typename IPsolver::Problem<Real, N, M>::MatrixJ;
+
+  using VectorD = Eigen::Vector<Real, D>;
+  using MatrixP = Eigen::Matrix<Real, D, M>;
 
 private:
-  Matrix m_P; // Input data matrix
-  Vector m_y; // Binary response vector
-  T m_lambda; // Regularization parameter
+  MatrixP m_P; // Input data matrix
+  VectorD m_y; // Binary response vector
+  Real m_lambda; // Regularization parameter
 
 public:
   // Constructor
-  LogisticRegression(const Matrix& P, const Vector& y, T lambda)
+  LogisticRegression(MatrixP const & P, VectorD const & y, Real const lambda)
     : m_P(P), m_y(y), m_lambda(lambda) {}
 
   // Logistic function
-  Vector logit(const Vector& x) const {
+  VectorD logit(VectorD const & x) const {
     return (1.0 / (1.0 + (-x.array()).exp())).matrix();
   }
 
-  // Objective function
-  T objective(const Vector& x) const override
+  // Objective function: negative log-likelihood + L2 regularization
+  Real objective(VectorM const & x) const override
   {
-    Vector u(logit(this->m_P * x));
+    VectorD u(this->logit(m_P * x));
     return -(this->m_y.array() * u.array().log() + (1.0 - this->m_y.array()) * (1.0 - u.array()).log()).sum()
       + this->m_lambda * x.sum();
   }
 
   // Gradient of the objective function
-  Vector objective_gradient(const Vector& x) const override
+  VectorM objective_gradient(VectorM const & x) const override
   {
-    Vector u(logit(this->m_P * x));
+    VectorD u(this->logit(m_P * x));
     return ((-this->m_P.transpose() * (this->m_y - u)).array() + this->m_lambda).matrix();
   }
 
   // Hessian of the objective function
-  Matrix objective_hessian(const Vector& x) const override
+  MatrixH objective_hessian(VectorM const & x) const override
   {
-    Vector u(logit(this->m_P * x));
-    Matrix U((u.array() * (1.0 - u.array())).matrix().asDiagonal());
+    VectorD u(this->logit(m_P * x));
+    Eigen::DiagonalMatrix<Real, D> U((u.array() * (1.0 - u.array())).matrix().asDiagonal());
     return this->m_P.transpose() * U * this->m_P;
   }
 
   // Constraints function
-  Vector constraints(const Vector& x) const override
+  VectorM constraints(VectorM const & x) const override
   {
     return -x;
   }
 
   // Jacobian of the constraints function
-  Matrix constraints_jacobian(const Vector& x, const Vector& /*z*/) const override
+  MatrixJ constraints_jacobian(VectorM const & x, VectorM const &) const override
   {
-    return -Matrix::Identity(x.size(), x.size());
+    return -MatrixJ::Identity(x.size(), x.size());
   }
 
   // Hessian of the Lagrangian function
-  Matrix lagrangian_hessian(const Vector& x, const Vector& /*z*/) const override
+  MatrixH lagrangian_hessian(VectorM const & x, VectorM const &) const override
   {
-    return Matrix::Zero(x.size(), x.size());
+    return MatrixH::Zero(x.size(), x.size());
   }
-
-}; // LogisticRegression class
+};
 
 // Logistic regression example
-TEMPLATE_TEST_CASE("Logistic regression example", "[template]", double) { // float, double, long double
+class LogisticRegressionTest : public testing::Test {
+protected:
+  using TestType = double;
 
-  using Vector = typename IPsolver::Problem<TestType>::Vector;
-  using Matrix = typename IPsolver::Problem<TestType>::Matrix;
+  static constexpr Integer N = 8;
+  static constexpr Integer M = 16;
+  static constexpr Integer D = 100;
+  static constexpr Integer NType = Eigen::Dynamic; // 8
+  static constexpr Integer MType = Eigen::Dynamic; // 16
+  static constexpr Integer DType = Eigen::Dynamic; // 100
 
-  // Define the logistic function
-  auto logit = [](const Vector& x) -> Vector {
-    return (1.0 / (1.0 + (-x.array()).exp())).matrix();
-  };
+  using VectorM = typename IPsolver::Problem<TestType, MType, MType>::VectorM;
+  using MatrixJ = typename IPsolver::Problem<TestType, MType, MType>::MatrixJ;
+  using VectorN = Eigen::Vector<TestType, N>;
+  using VectorD = Eigen::Vector<TestType, D>;
+  using MatrixA = Eigen::Matrix<TestType, D, N>;
+  using MatrixP = Eigen::Matrix<TestType, D, M>;
 
-  // CREATE DATA SET
-  // Generate the input vectors from the standard normal, and generate the binary responses from the
-  // regression with some additional noise, and then transform the results using the logistic function.
-  // The variable "beta" is the set of true regression coefficients of length m.
-  constexpr Integer m{8};
-  constexpr Integer n{100};
-  constexpr TestType epsilon{0.25};
+  std::unique_ptr<LogisticRegression<TestType, MType, MType, DType>> problem;
+  VectorM x_guess;
 
-  // True regression coefficients
-  Vector beta(m);
-  beta << 0.0, 0.0, 2.0, -4.0, 0.0, 0.0, -1.0, 3.0;
+  void SetUp() override
+  {
+    constexpr TestType epsilon{0.25};
 
-  // Standard deviation of coordinates
-  Vector sigma(m);
-  sigma << 10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0;
+    VectorN beta(N);
+    beta << 0.0, 0.0, 2.0, -4.0, 0.0, 0.0, -1.0, 3.0;
 
-  // The n x m matrix of samples
-  std::mt19937 gen(42);
-  std::normal_distribution<TestType> normal(0.0, 1.0);
-  Matrix A(n, m);
-  for (Integer i{0}; i < n; ++i) {
-    for (Integer j{0}; j < m; ++j) {
-      A(i, j) = sigma(j) * normal(gen);
+    VectorN sigma(N);
+    sigma << 10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0;
+
+    std::mt19937 gen(42);
+    std::normal_distribution<TestType> normal(0.0, 1.0);
+    MatrixA A(D, N);
+    for (Integer i{0}; i < D; ++i) {
+      for (Integer j{0}; j < N; ++j) {
+        A(i, j) = sigma(j) * normal(gen);
+      }
     }
+
+    VectorD noise(D);
+    for (Integer i{0}; i < D; ++i) {
+      noise(i) = epsilon * normal(gen);
+    }
+
+    auto logit = [](VectorD const & x) -> VectorD {
+      return (1.0 / (1.0 + (-x.array()).exp())).matrix();
+    };
+
+    VectorD y(logit(A * beta + noise));
+    for (Integer i{0}; i < D; ++i) {
+      y(i) = (normal(gen) < y(i)) ? 1.0 : 0.0;
+    }
+
+    constexpr TestType lambda{0.5};
+    MatrixP P(D, M);
+    P << A, -A;
+
+    x_guess = VectorM::Ones(M);
+
+    problem = std::make_unique<LogisticRegression<TestType, MType, MType, DType>>(P, y, lambda);
   }
+};
 
-  // Noise in outputs
-  Vector noise(n);
-  for (Integer i{0}; i < n; ++i) {
-    noise(i) = epsilon * normal(gen);
-  }
+TEST_F(LogisticRegressionTest, ProblemClass) {
+  IPsolver::Solver<TestType, MType, MType> solver(std::move(problem));
+  solver.verbose_mode(VERBOSE);
+  solver.tolerance(SOLVER_TOLERANCE);
+  solver.max_iterations(MAX_ITERATIONS);
+  solver.descent(IPsolver::Solver<TestType, MType, MType>::Descent::NEWTON);
 
-  // The binary outputs
-  Vector y(logit(A * beta + noise));
-  for (Integer i{0}; i < n; ++i) {
-    y(i) = (normal(gen) < y(i)) ? 1.0 : 0.0;
-  }
+  VectorM x_sol;
+  EXPECT_TRUE(solver.solve(x_guess, x_sol));
+}
 
-  // COMPUTE SOLUTION WITH INTERIOR-POINT METHOD.
-  // Compute the L1-regularized maximum likelihood estimator
-  constexpr TestType lambda{0.5};
-  Matrix P(n, 2*m);
-  P << A, -A;
-
-  // Solve the optimization problem
-  Vector x_guess(Vector::Ones(2*m));
-
-  // Create the problem object
-  std::unique_ptr<LogisticRegression<TestType>> problem{
-    std::make_unique<LogisticRegression<TestType>>(P, y, lambda)
-  };
-
-  // Create a problem wrapper object
-  IPsolver::ProblemWrapper<TestType> problem_wrapper(
-    [&problem](const Vector &x) {return problem->objective(x);},
-    [&problem](const Vector &x) {return problem->objective_gradient(x);},
-    [&problem](const Vector &x) {return problem->objective_hessian(x);},
-    [&problem](const Vector &x) {return problem->constraints(x);},
-    [&problem](const Vector &x, const Vector &z) {return problem->constraints_jacobian(x, z);},
-    [&problem](const Vector &x, const Vector &z) {return problem->lagrangian_hessian(x, z);}
+TEST_F(LogisticRegressionTest, ProblemWrapperClass) {
+  IPsolver::ProblemWrapper<TestType, MType, MType> problem_wrapper(
+    [this] (VectorM const & x) {return this->problem->objective(x);},
+    [this] (VectorM const & x) {return this->problem->objective_gradient(x);},
+    [this] (VectorM const & x) {return this->problem->objective_hessian(x);},
+    [this] (VectorM const & x) {return this->problem->constraints(x);},
+    [this] (VectorM const & x, VectorM const & z) {return this->problem->constraints_jacobian(x, z);},
+    [this] (VectorM const & x, VectorM const & z) {return this->problem->lagrangian_hessian(x, z);}
   );
 
-  // Solve the optimization problem with the problem class
-  SECTION("Problem Class") {
+  IPsolver::Solver<TestType, MType, MType> solver(
+    problem_wrapper.objective(), problem_wrapper.objective_gradient(), problem_wrapper.objective_hessian(),
+    problem_wrapper.constraints(), problem_wrapper.constraints_jacobian(), problem_wrapper.lagrangian_hessian()
+  );
+  solver.verbose_mode(VERBOSE);
+  solver.tolerance(SOLVER_TOLERANCE);
+  solver.max_iterations(MAX_ITERATIONS);
+  solver.descent(IPsolver::Solver<TestType, MType, MType>::Descent::NEWTON);
 
-    IPsolver::Solver<TestType> solver(std::move(problem));
-    solver.tolerance(1e-6);
-    solver.max_iterations(100);
-
-    // Does not work with this example, but kept for consistency
-    // SECTION("BFGS Descent")
-    // {
-    //   solver.descent(IPsolver::Solver<TestType>::Descent::BFGS);
-    //   Vector x_sol;
-    //   REQUIRE(solver.solve(x_guess, x_sol));
-    // }
-
-    SECTION("Newton Descent")
-    {
-      solver.descent(IPsolver::Solver<TestType>::Descent::NEWTON);
-      Vector x_sol;
-      REQUIRE(solver.solve(x_guess, x_sol));
-    }
-
-    // Does not work with this example, but kept for consistency
-    // SECTION("Steepest Descent")
-    // {
-    //   solver.descent(IPsolver::Solver<TestType>::Descent::STEEPEST);
-    //   Vector x_sol;
-    //   REQUIRE(solver.solve(x_guess, x_sol));
-    // }
-  }
-
-  // Create the quadratic program with the problem wrapper class
-  SECTION("Problem Wrapper Class")
-  {
-    IPsolver::Solver<TestType> solver(
-      problem_wrapper.objective(), problem_wrapper.objective_gradient(), problem_wrapper.objective_hessian(),
-      problem_wrapper.constraints(), problem_wrapper.constraints_jacobian(), problem_wrapper.lagrangian_hessian()
-    );
-    solver.tolerance(1e-6);
-    solver.max_iterations(100);
-
-    // Does not work with this example, but kept for consistency
-    // SECTION("BFGS Descent")
-    // {
-    //   solver.descent(IPsolver::Solver<TestType>::Descent::BFGS);
-    //   Vector x_sol;
-    //   REQUIRE(solver.solve(x_guess, x_sol));
-    // }
-
-    SECTION("Newton Descent")
-    {
-      solver.descent(IPsolver::Solver<TestType>::Descent::NEWTON);
-      Vector x_sol;
-      REQUIRE(solver.solve(x_guess, x_sol));
-    }
-
-    // Does not work with this example, but kept for consistency
-    // SECTION("Steepest Descent")
-    // {
-    //   solver.descent(IPsolver::Solver<TestType>::Descent::STEEPEST);
-    //   Vector x_sol;
-    //   REQUIRE(solver.solve(x_guess, x_sol));
-    // }
-  }
+  VectorM x_sol;
+  EXPECT_TRUE(solver.solve(x_guess, x_sol));
 }

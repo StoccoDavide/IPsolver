@@ -77,19 +77,19 @@ namespace IPsolver {
     std::unique_ptr<Problem<Real, N, M>> m_problem; /**< Problem object */
 
     Descent m_descent{Descent::NEWTON}; /**< Descent direction method */
-    Real    m_tolerance{1e-6};          /**< Tolerance for convergence */
+    Real    m_tolerance{1.0e-6};        /**< Tolerance for convergence */
     Integer m_max_iterations{100};      /**< Maximum number of iterations */
 
     // Some algorithm parameters
-    bool m_verbose{false};   /**< Verbosity flag */
-    Real m_epsilon{1e-8};    /**< Small constant to avoid numerical issues */
-    Real m_sigma_max{0.5};   /**< Maximum value for the centering parameter */
-    Real m_eta_max{0.25};    /**< Maximum value for the step size */
-    Real m_mu_min{1e-9};     /**< Minimum value for the barrier parameter */
-    Real m_alpha_max{0.995}; /**< Maximum value for the line search parameter */
-    Real m_alpha_min{1e-6};  /**< Minimum value for the line search parameter */
-    Real m_beta{0.75};       /**< Value for the backtracking line search */
-    Real m_tau{0.01};        /**< Parameter for the sufficient decrease condition */
+    bool m_verbose{false};    /**< Verbosity flag */
+    Real m_epsilon{1.0e-8};   /**< Small constant to avoid numerical issues */
+    Real m_sigma_max{0.5};    /**< Maximum value for the centering parameter */
+    Real m_eta_max{0.25};     /**< Maximum value for the step size */
+    Real m_mu_min{1.0e-9};    /**< Minimum value for the barrier parameter */
+    Real m_alpha_max{0.995};  /**< Maximum value for the line search parameter */
+    Real m_alpha_min{1.0e-6}; /**< Minimum value for the line search parameter */
+    Real m_beta{0.75};        /**< Value for the backtracking line search */
+    Real m_tau{0.01};         /**< Parameter for the sufficient decrease condition */
 
   public:
     /**
@@ -482,7 +482,8 @@ namespace IPsolver {
         mu          = std::max<Real>(this->m_mu_min, sigma * duality_gap / m);
 
         if (this->m_verbose) {
-          std::cout << "Iteration " << iter << ": f = " << f << ", |r| = " << norm_r0 / nv << std::endl;
+          std::cout << "Iteration " << iter << std::setprecision(6) << std::scientific
+            << ": f = " << f << ", |r| = " << norm_r0 / nv << std::endl;
         }
 
         // CONVERGENCE CHECK

@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['_7eproblem_0',['~Problem',['../class_i_psolver_1_1_problem.html#af96efbf5e051f5f1b21f33e2ceba5c45',1,'IPsolver::Problem']]],
-  ['_7eproblemwrapper_1',['~ProblemWrapper',['../class_i_psolver_1_1_problem_wrapper.html#abcc21a3a18b5c8186c14898a61903549',1,'IPsolver::ProblemWrapper']]],
-  ['_7esolver_2',['~Solver',['../class_i_psolver_1_1_solver.html#a3382169f83b99fdfcec13da2b486d8ef',1,'IPsolver::Solver']]]
+  ['verbose_5fmode_0',['verbose_mode',['../class_i_psolver_1_1_solver.html#ad8f4f363545114f3bb2f1f0bdd56e226',1,'IPsolver::Solver::verbose_mode()'],['../class_i_psolver_1_1_solver.html#a0c7625aa66f1788a10f4c083180e66b0',1,'IPsolver::Solver::verbose_mode(bool t_verbose)']]]
 ];

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['epsilon_0',['epsilon',['../class_i_psolver_1_1_solver.html#af4a038263f96d6dd5f7425ba7d812c6a',1,'IPsolver::Solver::epsilon(Real epsilon)'],['../class_i_psolver_1_1_solver.html#ad1e6f03d9d026b99d5e65bb39e7c54af',1,'IPsolver::Solver::epsilon() const']]],
-  ['eta_5fmax_1',['eta_max',['../class_i_psolver_1_1_solver.html#aa92887e0770f443b96729de90e88124c',1,'IPsolver::Solver::eta_max(Real eta_max)'],['../class_i_psolver_1_1_solver.html#ac849412f91db2b8afe9ee798b31014ad',1,'IPsolver::Solver::eta_max() const']]]
+  ['enable_5fverbose_5fmode_0',['enable_verbose_mode',['../class_i_psolver_1_1_solver.html#ac286e610c777c3616ab3258b2420ad98',1,'IPsolver::Solver']]],
+  ['epsilon_1',['epsilon',['../class_i_psolver_1_1_solver.html#acb228f380e3bfde0bd28064f23899b79',1,'IPsolver::Solver::epsilon(Real epsilon)'],['../class_i_psolver_1_1_solver.html#aa87a057366b3714cfc1355c06fcf6d4b',1,'IPsolver::Solver::epsilon() const']]],
+  ['eta_5fmax_2',['eta_max',['../class_i_psolver_1_1_solver.html#a73eaefd48faf422e129fd165dcbb8b1d',1,'IPsolver::Solver::eta_max(Real eta_max)'],['../class_i_psolver_1_1_solver.html#a5f3de21afd51f19235766fdff31aab1e',1,'IPsolver::Solver::eta_max() const']]]
 ];

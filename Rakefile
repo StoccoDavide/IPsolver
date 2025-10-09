@@ -75,7 +75,7 @@ TESTS = []
 desc "Run tests"
 task :run do
   puts "run test".yellow
-  Dir.glob('build/tests/test_*') do |cmd|
+  Dir.glob('./build/tests/test_*') do |cmd|
     next if cmd =~ /.manifest$|.dSYM$/
     puts "execute: #{cmd}".yellow
     sh cmd

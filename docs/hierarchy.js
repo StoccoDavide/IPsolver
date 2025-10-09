@@ -1,7 +1,8 @@
 var hierarchy =
 [
-    [ "IPsolver::Problem< Real >", "class_i_psolver_1_1_problem.html", [
-      [ "IPsolver::ProblemWrapper< Real >", "class_i_psolver_1_1_problem_wrapper.html", null ]
+    [ "IPsolver::Problem< Real, N, M >", "class_i_psolver_1_1_problem.html", null ],
+    [ "IPsolver::Problem< Real, Eigen::Dynamic, Eigen::Dynamic >", "class_i_psolver_1_1_problem.html", [
+      [ "IPsolver::ProblemWrapper< Real, N, M >", "class_i_psolver_1_1_problem_wrapper.html", null ]
     ] ],
-    [ "IPsolver::Solver< Real >", "class_i_psolver_1_1_solver.html", null ]
+    [ "IPsolver::Solver< Real, N, M >", "class_i_psolver_1_1_solver.html", null ]
 ];
