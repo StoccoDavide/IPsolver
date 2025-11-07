@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ipsolver_2ehh_0',['IPsolver.hh',['../_i_psolver_8hh.html',1,'']]]
+  ['finitedifferences_2ehh_0',['FiniteDifferences.hh',['../_finite_differences_8hh.html',1,'']]]
 ];

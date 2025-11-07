@@ -76,44 +76,50 @@ public:
   }
 
   // Objective function: negative log-likelihood + L2 regularization
-  Real objective(VectorM const & x) const override
+  bool objective(VectorM const & x, Real & out) const override
   {
     VectorD u(this->logit(m_P * x));
-    return -(this->m_y.array() * u.array().log() + (1.0 - this->m_y.array()) * (1.0 - u.array()).log()).sum()
+    out = -(this->m_y.array() * u.array().log() + (1.0 - this->m_y.array()) * (1.0 - u.array()).log()).sum()
       + this->m_lambda * x.sum();
+    return std::isfinite(out);
   }
 
   // Gradient of the objective function
-  VectorM objective_gradient(VectorM const & x) const override
+  bool objective_gradient(VectorM const & x, VectorM & out) const override
   {
     VectorD u(this->logit(m_P * x));
-    return ((-this->m_P.transpose() * (this->m_y - u)).array() + this->m_lambda).matrix();
+    out = ((-this->m_P.transpose() * (this->m_y - u)).array() + this->m_lambda).matrix();
+    return out.allFinite();
   }
 
   // Hessian of the objective function
-  MatrixH objective_hessian(VectorM const & x) const override
+  bool objective_hessian(VectorM const & x, MatrixH & out) const override
   {
     VectorD u(this->logit(m_P * x));
     Eigen::DiagonalMatrix<Real, D> U((u.array() * (1.0 - u.array())).matrix().asDiagonal());
-    return this->m_P.transpose() * U * this->m_P;
+    out = this->m_P.transpose() * U * this->m_P;
+    return out.allFinite();
   }
 
   // Constraints function
-  VectorM constraints(VectorM const & x) const override
+  bool constraints(VectorM const & x, VectorM & out) const override
   {
-    return -x;
+    out = -x;
+    return out.allFinite();
   }
 
   // Jacobian of the constraints function
-  MatrixJ constraints_jacobian(VectorM const & x, VectorM const &) const override
+  bool constraints_jacobian(VectorM const & x, MatrixJ & out) const override
   {
-    return -MatrixJ::Identity(x.size(), x.size());
+    out = -MatrixJ::Identity(x.size(), x.size());
+    return out.allFinite();
   }
 
   // Hessian of the Lagrangian function
-  MatrixH lagrangian_hessian(VectorM const & x, VectorM const &) const override
+  bool lagrangian_hessian(VectorM const & x, VectorM const & /*z*/, MatrixH & out) const override
   {
-    return MatrixH::Zero(x.size(), x.size());
+    out = MatrixH::Zero(x.size(), x.size());
+    return out.allFinite();
   }
 };
 
@@ -131,6 +137,7 @@ protected:
 
   using VectorM = typename IPsolver::Problem<TestType, MType, MType>::VectorM;
   using MatrixJ = typename IPsolver::Problem<TestType, MType, MType>::MatrixJ;
+  using MatrixH = typename IPsolver::Problem<TestType, MType, MType>::MatrixH;
   using VectorN = Eigen::Vector<TestType, N>;
   using VectorD = Eigen::Vector<TestType, D>;
   using MatrixA = Eigen::Matrix<TestType, D, N>;
@@ -195,12 +202,12 @@ TEST_F(LogisticRegressionTest, ProblemClass) {
 
 TEST_F(LogisticRegressionTest, ProblemWrapperClass) {
   IPsolver::ProblemWrapper<TestType, MType, MType> problem_wrapper(
-    [this] (VectorM const & x) {return this->problem->objective(x);},
-    [this] (VectorM const & x) {return this->problem->objective_gradient(x);},
-    [this] (VectorM const & x) {return this->problem->objective_hessian(x);},
-    [this] (VectorM const & x) {return this->problem->constraints(x);},
-    [this] (VectorM const & x, VectorM const & z) {return this->problem->constraints_jacobian(x, z);},
-    [this] (VectorM const & x, VectorM const & z) {return this->problem->lagrangian_hessian(x, z);}
+    [this] (VectorM const & x, TestType & out) {return this->problem->objective(x, out);},
+    [this] (VectorM const & x, VectorM & out) {return this->problem->objective_gradient(x, out);},
+    [this] (VectorM const & x, MatrixH & out) {return this->problem->objective_hessian(x, out);},
+    [this] (VectorM const & x, VectorM & out) {return this->problem->constraints(x, out);},
+    [this] (VectorM const & x, MatrixJ & out) {return this->problem->constraints_jacobian(x, out);},
+    [this] (VectorM const & x, VectorM const & z, MatrixH & out) {return this->problem->lagrangian_hessian(x, z, out);}
   );
 
   IPsolver::Solver<TestType, MType, MType> solver(

@@ -73,55 +73,58 @@ public:
     : m_H(H), m_q(q), m_P(P), m_r(r), m_b(b) {}
 
   // Objective function
-  Real objective(VectorN const & x) const override
+  bool objective(VectorN const & x, Real & out) const override
   {
-    return 0.5 * x.dot(this->m_H * x) + this->m_q.dot(x);
+    out = 0.5 * x.dot(this->m_H * x) + this->m_q.dot(x);
+    return std::isfinite(out);
   }
 
   // Gradient of the objective function
-  VectorN objective_gradient(VectorN const & x) const override
+  bool objective_gradient(VectorN const & x, VectorN & out) const override
   {
-    return this->m_H * x + this->m_q;
+    out = this->m_H * x + this->m_q;
+    return out.allFinite();
   }
 
   // Hessian of the objective function
-  MatrixH objective_hessian(VectorN const & /*x*/) const override
+  bool objective_hessian(VectorN const & /*x*/, MatrixH & out) const override
   {
-    return this->m_H;
+    out = this->m_H;
+    return out.allFinite();
   }
 
   // Constraints function
-  VectorM constraints(VectorN const & x) const override
+  bool constraints(VectorN const & x, VectorM & out) const override
   {
-    VectorM c(static_cast<Integer>(this->m_b.size()));
+    out = VectorM::Zero(static_cast<Integer>(this->m_b.size()));
     for (Integer i{0}; i < static_cast<Integer>(this->m_b.size()); ++i) {
-      c(i) = 0.5 * x.dot(this->m_P[i] * x) + this->m_r[i].dot(x) - this->m_b(i);
+      out(i) = 0.5 * x.dot(this->m_P[i] * x) + this->m_r[i].dot(x) - this->m_b(i);
     }
-    return c;
+    return out.allFinite();
   }
 
   // Jacobian of the constraints function
-  MatrixJ constraints_jacobian(VectorN const & x, VectorM const & /*z*/) const override
+  bool constraints_jacobian(VectorN const & x, MatrixJ & out) const override
   {
     Integer n{static_cast<Integer>(x.size())};
     Integer m{static_cast<Integer>(this->m_b.size())};
-    MatrixJ J(m, n);
+    out = MatrixJ::Zero(m, n);
     for (Integer i{0}; i < m; ++i) {
-      J.row(i) = (this->m_P[i] * x + this->m_r[i]).transpose();
+      out.row(i) = (this->m_P[i] * x + this->m_r[i]).transpose();
     }
-    return J;
+    return out.allFinite();
   }
 
   // Hessian of the Lagrangian function
-  MatrixH lagrangian_hessian(VectorN const & x, VectorM const & z) const override
+  bool lagrangian_hessian(VectorN const & x, VectorM const & z, MatrixH & out) const override
   {
     Integer n{static_cast<Integer>(x.size())};
     Integer m{static_cast<Integer>(this->m_b.size())};
-    MatrixH W = MatrixH::Zero(n, n);
+    out = MatrixH::Zero(n, n);
     for (Integer i{0}; i < m; ++i) {
-      W += z(i) * m_P[i];
+      out += z(i) * this->m_P[i];
     }
-    return W;
+    return out.allFinite();
   }
 
 }; // QuadraticProgram class
@@ -210,12 +213,13 @@ TEST_F(QuadraticProgramTest, Problem_Steepest) {
 
 TEST_F(QuadraticProgramTest, Wrapper_BFGS) {
   IPsolver::ProblemWrapper<TestType, NType, MType> problem_wrapper(
-    [this] (VectorN const & x) {return this->problem->objective(x);},
-    [this] (VectorN const & x) {return this->problem->objective_gradient(x);},
-    [this] (VectorN const & x) {return this->problem->objective_hessian(x);},
-    [this] (VectorN const & x) {return this->problem->constraints(x);},
-    [this] (VectorN const & x, VectorM const & z) {return this->problem->constraints_jacobian(x, z);},
-    [this] (VectorN const & x, VectorM const & z) {return this->problem->lagrangian_hessian(x, z);} );
+    [this] (const VectorN & x, TestType & out) {return this->problem->objective(x, out);},
+    [this] (const VectorN & x, VectorN & out) {return this->problem->objective_gradient(x, out);},
+    [this] (const VectorN & x, MatrixH & out) {return this->problem->objective_hessian(x, out);},
+    [this] (const VectorN & x, VectorM & out) {return this->problem->constraints(x, out);},
+    [this] (const VectorN & x, MatrixJ & out) {return this->problem->constraints_jacobian(x, out);},
+    [this] (const VectorN & x, const VectorM & z, MatrixH & out) {return this->problem->lagrangian_hessian(x, z, out);}
+  );
 
   IPsolver::Solver<TestType, NType, MType> solver(
     problem_wrapper.objective(), problem_wrapper.objective_gradient(), problem_wrapper.objective_hessian(),
@@ -233,12 +237,13 @@ TEST_F(QuadraticProgramTest, Wrapper_BFGS) {
 
 TEST_F(QuadraticProgramTest, Wrapper_Newton) {
   IPsolver::ProblemWrapper<TestType, NType, MType> problem_wrapper(
-    [this] (VectorN const & x) {return this->problem->objective(x);},
-    [this] (VectorN const & x) {return this->problem->objective_gradient(x);},
-    [this] (VectorN const & x) {return this->problem->objective_hessian(x);},
-    [this] (VectorN const & x) {return this->problem->constraints(x);},
-    [this] (VectorN const & x, VectorM const & z) {return this->problem->constraints_jacobian(x, z);},
-    [this] (VectorN const & x, VectorM const & z) {return this->problem->lagrangian_hessian(x, z);} );
+    [this] (const VectorN & x, TestType & out) {return this->problem->objective(x, out);},
+    [this] (const VectorN & x, VectorN & out) {return this->problem->objective_gradient(x, out);},
+    [this] (const VectorN & x, MatrixH & out) {return this->problem->objective_hessian(x, out);},
+    [this] (const VectorN & x, VectorM & out) {return this->problem->constraints(x, out);},
+    [this] (const VectorN & x, MatrixJ & out) {return this->problem->constraints_jacobian(x, out);},
+    [this] (const VectorN & x, const VectorM & z, MatrixH & out) {return this->problem->lagrangian_hessian(x, z, out);}
+  );
 
   IPsolver::Solver<TestType, NType, MType> solver(
     problem_wrapper.objective(), problem_wrapper.objective_gradient(), problem_wrapper.objective_hessian(),
@@ -256,12 +261,13 @@ TEST_F(QuadraticProgramTest, Wrapper_Newton) {
 
 TEST_F(QuadraticProgramTest, Wrapper_Steepest) {
   IPsolver::ProblemWrapper<TestType, NType, MType> problem_wrapper(
-    [this] (VectorN const & x) {return this->problem->objective(x);},
-    [this] (VectorN const & x) {return this->problem->objective_gradient(x);},
-    [this] (VectorN const & x) {return this->problem->objective_hessian(x);},
-    [this] (VectorN const & x) {return this->problem->constraints(x);},
-    [this] (VectorN const & x, VectorM const & z) {return this->problem->constraints_jacobian(x, z);},
-    [this] (VectorN const & x, VectorM const & z) {return this->problem->lagrangian_hessian(x, z);} );
+    [this] (const VectorN & x, TestType & out) {return this->problem->objective(x, out);},
+    [this] (const VectorN & x, VectorN & out) {return this->problem->objective_gradient(x, out);},
+    [this] (const VectorN & x, MatrixH & out) {return this->problem->objective_hessian(x, out);},
+    [this] (const VectorN & x, VectorM & out) {return this->problem->constraints(x, out);},
+    [this] (const VectorN & x, MatrixJ & out) {return this->problem->constraints_jacobian(x, out);},
+    [this] (const VectorN & x, const VectorM & z, MatrixH & out) {return this->problem->lagrangian_hessian(x, z, out);}
+  );
 
   IPsolver::Solver<TestType, NType, MType> solver(
     problem_wrapper.objective(), problem_wrapper.objective_gradient(), problem_wrapper.objective_hessian(),

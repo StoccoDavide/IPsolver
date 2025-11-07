@@ -18,6 +18,10 @@ file(GLOB_RECURSE TEST_QUADRATIC "${CMAKE_CURRENT_SOURCE_DIR}/test_quadratic.cc"
 add_executable(test_quadratic ${TEST_QUADRATIC})
 target_link_libraries(test_quadratic PRIVATE IPsolver GTest::gtest_main)
 
+file(GLOB_RECURSE TEST_QUADRATIC_FD "${CMAKE_CURRENT_SOURCE_DIR}/test_quadratic_fd.cc")
+add_executable(test_quadratic_fd ${TEST_QUADRATIC_FD})
+target_link_libraries(test_quadratic_fd PRIVATE IPsolver GTest::gtest_main)
+
 file(GLOB_RECURSE TEST_LOGISTIC "${CMAKE_CURRENT_SOURCE_DIR}/test_logistic.cc")
 add_executable(test_logistic ${TEST_LOGISTIC})
 target_link_libraries(test_logistic PRIVATE IPsolver GTest::gtest_main)

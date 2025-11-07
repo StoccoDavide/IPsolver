@@ -238,8 +238,8 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:ab932f1a04605de9313b16388e70ff6e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the merit function.  <br /></td></tr>
 <tr class="memitem:a51597044c05d7ba82c8d9a037065b9d1" id="r_a51597044c05d7ba82c8d9a037065b9d1"><td class="memItemLeft" align="right" valign="top">Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51597044c05d7ba82c8d9a037065b9d1">grad_merit</a> (<a class="el" href="#a036167d8e07ae580a949c86a81059013">VectorN</a> const &amp;x, <a class="el" href="#adf79e42396fda5999c378322eb5406e4">VectorM</a> const &amp;z, <a class="el" href="#a036167d8e07ae580a949c86a81059013">VectorN</a> const &amp;p_x, <a class="el" href="#adf79e42396fda5999c378322eb5406e4">VectorM</a> const &amp;p_z, <a class="el" href="#a036167d8e07ae580a949c86a81059013">VectorN</a> const &amp;g, <a class="el" href="#adf79e42396fda5999c378322eb5406e4">VectorM</a> const &amp;c, <a class="el" href="#a475bc71e14ee4cf5175dc6abe1f4b240">MatrixJ</a> const &amp;J, Real const mu)</td></tr>
 <tr class="memdesc:a51597044c05d7ba82c8d9a037065b9d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the directional derivative of the merit function.  <br /></td></tr>
-<tr class="memitem:ae253509c8e5f7b3e0be096c6a32e25e4" id="r_ae253509c8e5f7b3e0be096c6a32e25e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a8143d05417ab04af5dbc739fdeb7abd8">MatrixH</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae253509c8e5f7b3e0be096c6a32e25e4">bfgs_update</a> (<a class="el" href="#a8143d05417ab04af5dbc739fdeb7abd8">MatrixH</a> const &amp;B, <a class="el" href="#a036167d8e07ae580a949c86a81059013">VectorN</a> const &amp;s, <a class="el" href="#a036167d8e07ae580a949c86a81059013">VectorN</a> const &amp;y)</td></tr>
-<tr class="memdesc:ae253509c8e5f7b3e0be096c6a32e25e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Browder-Broyden-Fletcher-Goldfarb-Shanno (BFGS) update for the Hessian approximation.  <br /></td></tr>
+<tr class="memitem:a96964ffd5ac615dea44c45198fd8a48d" id="r_a96964ffd5ac615dea44c45198fd8a48d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96964ffd5ac615dea44c45198fd8a48d">bfgs_update</a> (<a class="el" href="#a8143d05417ab04af5dbc739fdeb7abd8">MatrixH</a> &amp;B, <a class="el" href="#a036167d8e07ae580a949c86a81059013">VectorN</a> const &amp;s, <a class="el" href="#a036167d8e07ae580a949c86a81059013">VectorN</a> const &amp;y)</td></tr>
+<tr class="memdesc:a96964ffd5ac615dea44c45198fd8a48d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Browder-Broyden-Fletcher-Goldfarb-Shanno (BFGS) update for the Hessian approximation.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -328,7 +328,7 @@ template&lt;typename Real, <a class="el" href="namespace_i_psolver.html#a9cfbb97
 <div class="line">      BFGS     = 1, </div>
 <div class="line">      STEEPEST = 2  </div>
 <div class="line">    }</div>
-<div class="ttc" id="aclass_i_psolver_1_1_solver_html_ac859a350cf31e42970bbbe072f77b811"><div class="ttname"><a href="#ac859a350cf31e42970bbbe072f77b811">IPsolver::Solver::Descent</a></div><div class="ttdeci">enum class Descent :Integer { NEWTON=0, BFGS=1, STEEPEST=2 } Descent</div><div class="ttdef"><b>Definition</b> Solver.hh:56</div></div>
+<div class="ttc" id="aclass_i_psolver_1_1_solver_html_ac859a350cf31e42970bbbe072f77b811"><div class="ttname"><a href="#ac859a350cf31e42970bbbe072f77b811">IPsolver::Solver::Descent</a></div><div class="ttdeci">enum class Descent :Integer { NEWTON=0, BFGS=1, STEEPEST=2 } Descent</div><div class="ttdef"><b>Definition</b> Solver.hh:54</div></div>
 <div class="ttc" id="anamespace_i_psolver_html_a9cfbb973ab821211ecc159aeef1330d7"><div class="ttname"><a href="namespace_i_psolver.html#a9cfbb973ab821211ecc159aeef1330d7">IPsolver::Integer</a></div><div class="ttdeci">IPSOLVER_DEFAULT_INTEGER_TYPE Integer</div><div class="ttdoc">The Integer type as used for the API.</div><div class="ttdef"><b>Definition</b> IPsolver.hh:116</div></div>
 </div><!-- fragment --><p><a class="el" href="#ac859a350cf31e42970bbbe072f77b811">Descent</a> direction enumeration </p>
 
@@ -934,8 +934,8 @@ template&lt;typename Real, <a class="el" href="namespace_i_psolver.html#a9cfbb97
 
 </div>
 </div>
-<a id="ae253509c8e5f7b3e0be096c6a32e25e4" name="ae253509c8e5f7b3e0be096c6a32e25e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae253509c8e5f7b3e0be096c6a32e25e4">&#9670;&#160;</a></span>bfgs_update()</h2>
+<a id="a96964ffd5ac615dea44c45198fd8a48d" name="a96964ffd5ac615dea44c45198fd8a48d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96964ffd5ac615dea44c45198fd8a48d">&#9670;&#160;</a></span>bfgs_update()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -946,9 +946,9 @@ template&lt;typename Real, <a class="el" href="namespace_i_psolver.html#a9cfbb97
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a8143d05417ab04af5dbc739fdeb7abd8">MatrixH</a> <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real, N, M &gt;::bfgs_update </td>
+          <td class="memname">void <a class="el" href="class_i_psolver_1_1_solver.html">IPsolver::Solver</a>&lt; Real, N, M &gt;::bfgs_update </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a8143d05417ab04af5dbc739fdeb7abd8">MatrixH</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a8143d05417ab04af5dbc739fdeb7abd8">MatrixH</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>B</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

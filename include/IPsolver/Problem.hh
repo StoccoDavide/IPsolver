@@ -11,8 +11,13 @@
 #ifndef INCLUDE_IPSOLVER_PROBLEM_HH
 #define INCLUDE_IPSOLVER_PROBLEM_HH
 
-#include <Eigen/Dense>
+// Standard libraries
 #include <functional>
+
+// Eigen library
+#ifndef IPSOLVER_EIGEN_EXTERNAL
+#include <Eigen/Dense>
+#endif
 
 namespace IPsolver {
 
@@ -39,8 +44,8 @@ namespace IPsolver {
       "IPsolver::Problem: dimensions 'N' and 'M' are either both dynamic or both fixed");
 
   public:
-    using VectorN  = Eigen::Vector<Real, N>;
-    using VectorM  = Eigen::Vector<Real, M>;
+    using VectorN = Eigen::Vector<Real, N>;
+    using VectorM = Eigen::Vector<Real, M>;
     using MatrixH = Eigen::Matrix<Real, N, N>;
     using MatrixJ = Eigen::Matrix<Real, M, N>;
 
@@ -70,46 +75,51 @@ namespace IPsolver {
     /**
     * \brief Evaluate the objective function.
     * \param[in] x Primal variable vector.
-    * \return The objective function.
+    * \param[out] out The objective function value.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    virtual Real objective(VectorN const & x) const = 0;
+    virtual bool objective(VectorN const & x, Real & out) const = 0;
 
     /**
     * \brief Evaluate the gradient of the objective function.
     * \param[in] x Primal variable vector.
-    * \return The gradient of the objective function.
+    * \param[out] out The gradient of the objective function.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    virtual VectorN objective_gradient(VectorN const & x) const = 0;
+    virtual bool objective_gradient(VectorN const & x, VectorN & out) const = 0;
 
     /**
     * \brief Evaluate the Hessian of the objective function.
     * \param[in] x Primal variable vector.
-    * \return The Hessian matrix of the objective function.
+    * \param[out] out The Hessian matrix of the objective function.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    virtual MatrixH objective_hessian(VectorN const & x) const = 0;
+    virtual bool objective_hessian(VectorN const & x, MatrixH & out) const = 0;
 
     /**
     * \brief Evaluate the constraints function.
     * \param[in] x Primal variable vector.
-    * \return The value of the constraints function.
+    * \param[out] out The constraints function value.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    virtual VectorM constraints(VectorN const & x) const = 0;
+    virtual bool constraints(VectorN const & x, VectorM & out) const = 0;
 
     /**
     * \brief Evaluate the Jacobian of the constraints function with respect to the primal variables.
     * \param[in] x Primal variable vector.
-    * \param[in] z Dual variable vector.
-    * \return The Jacobian matrix of the constraints function.
+    * \param[out] out The Jacobian matrix of the constraints function.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    virtual MatrixJ constraints_jacobian(VectorN const & x, VectorM const & z) const = 0;
+    virtual bool constraints_jacobian(VectorN const & x, MatrixJ & out) const = 0;
 
     /**
     * \brief Evaluate the Hessian of the Lagrangian function with respect to the primal variables.
     * \param[in] x Primal variable vector.
     * \param[in] z Dual variable vector.
-    * \return The Hessian matrix of the Lagrangian function.
+    * \param[out] out The Hessian matrix of the Lagrangian function.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    virtual MatrixH lagrangian_hessian(VectorN const & x, VectorM const & z) const = 0;
+    virtual bool lagrangian_hessian(VectorN const & x, VectorM const & z, MatrixH & out) const = 0;
 
   }; // class Problem
 
@@ -132,12 +142,12 @@ namespace IPsolver {
     using MatrixH = typename Problem<Real, N, M>::MatrixH;
     using MatrixJ = typename Problem<Real, N, M>::MatrixJ;
 
-    using ObjectiveFunc           = std::function<Real(VectorN const &)>;
-    using ObjectiveGradientFunc   = std::function<VectorN(VectorN const &)>;
-    using ObjectiveHessianFunc    = std::function<MatrixH(VectorN const &)>;
-    using ConstraintsFunc         = std::function<VectorM(VectorN const &)>;
-    using ConstraintsJacobianFunc = std::function<MatrixJ(VectorN const &, VectorM const &)>;
-    using LagrangianHessianFunc   = std::function<MatrixH(VectorN const &, VectorM const &)>;
+    using ObjectiveFunc           = std::function<bool(VectorN const &, Real &)>;
+    using ObjectiveGradientFunc   = std::function<bool(VectorN const &, VectorN &)>;
+    using ObjectiveHessianFunc    = std::function<bool(VectorN const &, MatrixH &)>;
+    using ConstraintsFunc         = std::function<bool(VectorN const &, VectorM &)>;
+    using ConstraintsJacobianFunc = std::function<bool(VectorN const &, MatrixJ &)>;
+    using LagrangianHessianFunc   = std::function<bool(VectorN const &, VectorM const &, MatrixH &)>;
 
   private:
     ObjectiveFunc           m_objective{nullptr};            /*!< Objective function \f$ f(\mathbf{x}) \f$ */
@@ -282,46 +292,69 @@ namespace IPsolver {
     /**
     * \brief Evaluate the objective function.
     * \param[in] x Primal variable vector.
-    * \return The objective function.
+    * \param[out] out The value of the objective function.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    Real objective(VectorN const & x) const override {return this->m_objective(x);}
+    bool objective(VectorN const & x, Real & out) const override
+    {
+      return this->m_objective(x, out);
+    }
 
     /**
     * \brief Evaluate the gradient of the objective function.
     * \param[in] x Primal variable vector.
-    * \return The gradient of the objective function.
+    * \param[out] out The gradient of the objective function.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    VectorN objective_gradient(VectorN const & x) const override {return this->m_objective_gradient(x);}
+    bool objective_gradient(VectorN const & x, VectorN & out) const override
+    {
+      return this->m_objective_gradient(x, out);
+    }
 
     /**
     * \brief Evaluate the Hessian of the objective function.
     * \param[in] x Primal variable vector.
-    * \return The Hessian matrix of the objective function.
+    * \param[out] out The Hessian matrix of the objective function.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    MatrixH objective_hessian(VectorN const & x) const override {return this->m_objective_hessian(x);}
+    bool objective_hessian(VectorN const & x, MatrixH & out) const override
+    {
+      return this->m_objective_hessian(x, out);
+    }
 
     /**
     * \brief Evaluate the constraints function.
     * \param[in] x Primal variable vector.
-    * \return The value of the constraints function.
+    * \param[out] out The value of the constraints function.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    VectorM constraints(VectorN const & x) const override {return this->m_constraints(x);}
+    bool constraints(VectorN const & x, VectorM & out) const override
+    {
+      return this->m_constraints(x, out);
+    }
 
     /**
     * \brief Evaluate the Jacobian of the constraints function.
     * \param[in] x Primal variable vector.
-    * \param[in] z Dual variable vector.
-    * \return The Jacobian matrix of the constraints function.
+    * \param[out] out The Jacobian matrix of the constraints function.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    MatrixJ constraints_jacobian(VectorN const & x, VectorM const & z) const override {return this->m_constraints_jacobian(x, z);}
+    bool constraints_jacobian(VectorN const & x, MatrixJ & out) const override
+    {
+      return this->m_constraints_jacobian(x, out);
+    }
 
     /**
     * \brief Evaluate the Hessian of the Lagrangian function.
     * \param[in] x Primal variable vector.
     * \param[in] z Dual variable vector.
-    * \return The Hessian matrix of the Lagrangian function.
+    * \param[out] out The Hessian matrix of the Lagrangian function.
+    * \return True if the evaluation was successful, false otherwise.
     */
-    MatrixH lagrangian_hessian(VectorN const & x, VectorM const & z) const override {return this->m_lagrangian_hessian(x, z);}
+    bool lagrangian_hessian(VectorN const & x, VectorM const & z, MatrixH & out) const override
+    {
+      return this->m_lagrangian_hessian(x, z, out);
+    }
 
   }; // class ProblemWrapper
 

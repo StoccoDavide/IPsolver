@@ -25,7 +25,7 @@ var class_i_psolver_1_1_solver =
     [ "alpha_min", "class_i_psolver_1_1_solver.html#a0551ce60616a0cbd2fa7e6dc509a34b0", null ],
     [ "beta", "class_i_psolver_1_1_solver.html#a367a275c6974542f7768a326bd643288", null ],
     [ "beta", "class_i_psolver_1_1_solver.html#a2f01a9e16940967bcbe9efaeda5fb36b", null ],
-    [ "bfgs_update", "class_i_psolver_1_1_solver.html#ae253509c8e5f7b3e0be096c6a32e25e4", null ],
+    [ "bfgs_update", "class_i_psolver_1_1_solver.html#a96964ffd5ac615dea44c45198fd8a48d", null ],
     [ "descent", "class_i_psolver_1_1_solver.html#a1b2d1d89a594ac90ce2292018cab36a0", null ],
     [ "descent", "class_i_psolver_1_1_solver.html#a751489c636b57a67a71f02b6449ce14a", null ],
     [ "disable_verbose_mode", "class_i_psolver_1_1_solver.html#affefa6d423bf05adf0af74e2ab498df8", null ],

@@ -18,11 +18,9 @@
 #include <iomanip>
 #include <algorithm>
 
-// Eigen library
-#include <Eigen/Dense>
-
 // IPsolver includes
 #include "IPsolver/Problem.hh"
+#include "IPsolver/FiniteDifferences.hh"
 
 namespace IPsolver {
 
@@ -54,10 +52,10 @@ namespace IPsolver {
   {
   public:
     using Descent = enum class Descent : Integer {
-      NEWTON   = 0, /**< Use Newton's method for descent direction */
-      BFGS     = 1, /**< Use BFGS method for descent direction */
-      STEEPEST = 2  /**< Use steepest descent method for descent direction */
-    }; /**< Descent direction enumeration */
+      NEWTON   = 0, /*!< Use Newton's method for descent direction */
+      BFGS     = 1, /*!< Use BFGS method for descent direction */
+      STEEPEST = 2  /*!< Use steepest descent method for descent direction */
+    }; /*!< Descent direction enumeration */
 
     using UniquePtr = std::unique_ptr<Problem<Real, N, M>>;
 
@@ -74,22 +72,22 @@ namespace IPsolver {
     using LagrangianHessianFunc   = typename ProblemWrapper<Real, N, M>::LagrangianHessianFunc;
 
   private:
-    std::unique_ptr<Problem<Real, N, M>> m_problem; /**< Problem object */
+    std::unique_ptr<Problem<Real, N, M>> m_problem; /*!< Problem object */
 
-    Descent m_descent{Descent::NEWTON}; /**< Descent direction method */
-    Real    m_tolerance{1.0e-6};        /**< Tolerance for convergence */
-    Integer m_max_iterations{100};      /**< Maximum number of iterations */
+    Descent m_descent{Descent::NEWTON}; /*!< Descent direction method */
+    Real    m_tolerance{1.0e-6};        /*!< Tolerance for convergence */
+    Integer m_max_iterations{100};      /*!< Maximum number of iterations */
 
     // Some algorithm parameters
-    bool m_verbose{false};    /**< Verbosity flag */
-    Real m_epsilon{1.0e-8};   /**< Small constant to avoid numerical issues */
-    Real m_sigma_max{0.5};    /**< Maximum value for the centering parameter */
-    Real m_eta_max{0.25};     /**< Maximum value for the step size */
-    Real m_mu_min{1.0e-9};    /**< Minimum value for the barrier parameter */
-    Real m_alpha_max{0.995};  /**< Maximum value for the line search parameter */
-    Real m_alpha_min{1.0e-6}; /**< Minimum value for the line search parameter */
-    Real m_beta{0.75};        /**< Value for the backtracking line search */
-    Real m_tau{0.01};         /**< Parameter for the sufficient decrease condition */
+    bool m_verbose{false};    /*!< Verbosity flag */
+    Real m_epsilon{1.0e-8};   /*!< Small constant to avoid numerical issues */
+    Real m_sigma_max{0.5};    /*!< Maximum value for the centering parameter */
+    Real m_eta_max{0.25};     /*!< Maximum value for the step size */
+    Real m_mu_min{1.0e-9};    /*!< Minimum value for the barrier parameter */
+    Real m_alpha_max{0.995};  /*!< Maximum value for the line search parameter */
+    Real m_alpha_min{1.0e-6}; /*!< Minimum value for the line search parameter */
+    Real m_beta{0.75};        /*!< Value for the backtracking line search */
+    Real m_tau{0.01};         /*!< Parameter for the sufficient decrease condition */
 
   public:
     /**
@@ -435,7 +433,9 @@ namespace IPsolver {
       // primal-dual optimization variables (nv), and initialize the Lagrange multipliers and the
       // second-order information
       VectorN x(x_guess);
-      VectorM c(this->m_problem->constraints(x));
+      VectorM c;
+      bool success{this->m_problem->constraints(x, c)};
+      IPSOLVER_ASSERT(success, CMD "failed to evaluate constraints");
       Integer n{static_cast<Integer>(x.size())};
       Integer m{static_cast<Integer>(c.size())};
       Integer nv{n + m};
@@ -461,13 +461,19 @@ namespace IPsolver {
         // response of the inequality constraints, the Jacobian of the inequality constraints, the
         // Hessian of the Lagrangian (minus the Hessian of the objective) and, optionally, the
         // Hessian of the objective.
-        f = this->m_problem->objective(x);
-        c = this->m_problem->constraints(x);
-        g = this->m_problem->objective_gradient(x);
-        J = this->m_problem->constraints_jacobian(x, z);
-        W = this->m_problem->lagrangian_hessian(x, z);
+        success = this->m_problem->objective(x, f);
+        IPSOLVER_ASSERT(success, CMD "failed to evaluate objective function");
+        success = this->m_problem->constraints(x, c);
+        IPSOLVER_ASSERT(success, CMD "failed to evaluate constraints");
+        success = this->m_problem->objective_gradient(x, g);
+        IPSOLVER_ASSERT(success, CMD "failed to evaluate objective gradient");
+        success = this->m_problem->constraints_jacobian(x, J);
+        IPSOLVER_ASSERT(success, CMD "failed to evaluate constraints jacobian");
+        success = this->m_problem->lagrangian_hessian(x, z, W);
+        IPSOLVER_ASSERT(success, CMD "failed to evaluate lagrangian hessian");
         if (this->m_descent == Descent::NEWTON) {
-          B = this->m_problem->objective_hessian(x);
+          success = this->m_problem->objective_hessian(x, B);
+          IPSOLVER_ASSERT(success, CMD "failed to evaluate objective hessian");
         }
 
         // Compute the responses of the unperturbed Karush-Kuhn-Tucker optimality conditions.
@@ -495,7 +501,7 @@ namespace IPsolver {
 
         // Update the BFGS approximation to the Hessian of the objective
         if (this->m_descent == Descent::BFGS && iter > 0) {
-          B = this->bfgs_update(B, alpha * p_x, g - g_old);
+          this->bfgs_update(B, alpha * p_x, g - g_old);
         }
 
         // SOLUTION TO PERTURBED KKT SYSTEM
@@ -528,8 +534,10 @@ namespace IPsolver {
           // and merit function at the candidate point
           x_new = x + alpha * p_x;
           z_new = z + alpha * p_z;
-          f = this->m_problem->objective(x_new);
-          c = this->m_problem->constraints(x_new);
+          success = this->m_problem->objective(x_new, f);
+          IPSOLVER_ASSERT(success, CMD "failed to evaluate objective function at candidate point");
+          success = this->m_problem->constraints(x_new, c);
+          IPSOLVER_ASSERT(success, CMD "failed to evaluate constraints at candidate point");
           psi_new = this->merit(x_new, z_new, f, c, mu);
 
           // Stop backtracking search if we've found a candidate point that sufficiently decreases
@@ -621,12 +629,12 @@ private:
     * \param[in] y Gradient difference (g_new - g).
     * \return Updated Hessian approximation.
     */
-    MatrixH bfgs_update(MatrixH const & B, VectorN const & s, VectorN const & y)
+    void bfgs_update(MatrixH & B, VectorN const & s, VectorN const & y)
     {
       IPSOLVER_ASSERT(y.dot(s) > 0.0,
         "IPsolver::Solver::bfgs_update(...): update condition yᵀs > 0 not satisfied");
       VectorN x(B * s);
-      return B - (x * x.transpose()) / (s.dot(x)) + (y * y.transpose()) / (y.dot(s));
+      B -= (x * x.transpose()) / (s.dot(x)) + (y * y.transpose()) / (y.dot(s));
     }
 
   }; // class IPSolver
