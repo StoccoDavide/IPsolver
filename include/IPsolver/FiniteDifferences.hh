@@ -28,17 +28,23 @@ namespace IPsolver {
     */
     template<typename Real>
     class Epsilon {
+    public:
       static constexpr Real EPSILON{std::numeric_limits<Real>::epsilon()};     /*!< Machine epsilon epsilon static constant value. */ \
-      static constexpr Real EPSILON_HIGH{1.0e-12};                             /*!< High precision epsilon static constant value. */ \
-      static constexpr Real EPSILON_MEDIUM{1.0e-10};                           /*!< Medium precision epsilon static constant value. */ \
-      static constexpr Real EPSILON_LOW{1.0e-08};                              /*!< Low precision epsilon static constant value. */ \
-      static constexpr Real INFTY{std::numeric_limits<Real>::infinity()};      /*!< Infinity static constant value. */ \
-      static constexpr Real QUIET_NAN{std::numeric_limits<Real>::quiet_NaN()}; /*!< Not-a-number static constant value. */
 
+    private:
       Real m_epsilon_1{std::sqrt(EPSILON)};      /*!< Square root of machine epsilon \f$ \sqrt{\epsilon} \f$. */
       Real m_epsilon_2{std::pow(EPSILON, 0.75)}; /*!< Epsilon to the power of 3/4. */
       Real m_epsilon_3{std::pow(EPSILON, 0.25)}; /*!< Epsilon to the power of 1/4. */
     public:
+      /** Default constructor. */
+      Epsilon() = default;
+
+      /** Class constructor with custom epsilons. */
+      Epsilon(Real const eps)
+        : m_epsilon_1(std::sqrt(eps)),
+          m_epsilon_2(std::pow(eps, 0.75)),
+          m_epsilon_3(std::pow(eps, 0.25))
+      {}
 
       /** Returns \f$ \epsilon_1 \f$ scaled by |v|+1. */
       Real epsilon_1(Real const v) const {return (std::abs(v) + 1.0)*this->m_epsilon_1;}
@@ -154,16 +160,19 @@ namespace IPsolver {
     * \param[in] x Point at which to compute gradient.
     * \param[in] fun Function to differentiate.
     * \param[out] grad Gradient vector.
+    * \param[in] epsilon Epsilon value for finite differences.
     * \return True if successful, false otherwise.
     */
     template <typename Function, typename Real>
-    bool Gradient(Eigen::Vector<Real, Eigen::Dynamic> const & x, Function fun, Eigen::Vector<Real, Eigen::Dynamic> & grad)
+    bool Gradient(Eigen::Vector<Real, Eigen::Dynamic> const & x, Function fun, Eigen::Vector<Real, Eigen::Dynamic> & grad,
+      Real epsilon = Epsilon<Real>::EPSILON)
     {
-      Epsilon<Real> eps;
+      Epsilon<Real> eps(epsilon);
       Real v_c{0.0};
       if (!fun(x, v_c) || !std::isfinite(v_c)) {return false;}
       grad.resize(x.size());
-      for (Integer i{0}; i < x.size(); ++i) {
+      Integer dim_x{static_cast<Integer>(x.size())};
+      for (Integer i{0}; i < dim_x; ++i) {
         Eigen::Vector<Real, Eigen::Dynamic> v_x(x);
         Real tmp{x[i]};
         Real h_1{eps.epsilon_1(tmp)};
@@ -201,12 +210,14 @@ namespace IPsolver {
     * \param[in] x Point at which to compute Jacobian.
     * \param[in] fun Function to differentiate.
     * \param[out] jac Output Jacobian matrix.
+    * \param[in] epsilon Epsilon value for finite differences.
     * \return True if successful, false otherwise.
     */
     template <typename Function, typename Real>
-    bool Jacobian(Eigen::Vector<Real, Eigen::Dynamic> const & x, Function fun, Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic> & jac)
+    bool Jacobian(Eigen::Vector<Real, Eigen::Dynamic> const & x, Function fun, Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic> & jac,
+      Real epsilon = Epsilon<Real>::EPSILON)
     {
-      Epsilon<Real> eps;
+      Epsilon<Real> eps(epsilon);
       Eigen::Vector<Real, Eigen::Dynamic> v_c;
       if (!fun(x, v_c) || !v_c.allFinite()) {return false;}
       Integer dim_x{static_cast<Integer>(x.size())};
@@ -250,12 +261,14 @@ namespace IPsolver {
     * \param[in] x Point at which to compute Hessian.
     * \param[in] fun Function to differentiate.
     * \param[out] hes Hessian matrix.
+    * \param[in] epsilon Epsilon value for finite differences.
     * \return True if successful, false otherwise.
     */
     template <typename Function, typename Real>
-    bool Hessian(Eigen::Vector<Real, Eigen::Dynamic> const & x, Function fun, Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic> & hes)
+    bool Hessian(Eigen::Vector<Real, Eigen::Dynamic> const & x, Function fun, Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic> & hes,
+      Real epsilon = Epsilon<Real>::EPSILON)
     {
-      Epsilon<Real> eps;
+      Epsilon<Real> eps(epsilon);
       Integer dim_x{static_cast<Integer>(x.size())};
       hes.resize(dim_x, dim_x);
       Real fc{0.0};
@@ -346,13 +359,14 @@ namespace IPsolver {
     * \param[in] x Point at which to compute gradient.
     * \param[in] fun Function to differentiate.
     * \param[out] grad Gradient vector.
+    * \param[in] epsilon Epsilon value for finite differences.
     * \return True if successful, false otherwise.
     */
     template <typename Function, typename Vector>
-    bool Gradient(Vector const & x, Function fun, Vector & grad)
+    bool Gradient(Vector const & x, Function fun, Vector & grad, typename Vector::Scalar epsilon = Epsilon<typename Vector::Scalar>::EPSILON)
     {
       using Real = typename Vector::Scalar;
-      Epsilon<Real> eps;
+      Epsilon<Real> eps(epsilon);
       Real v_c{0.0};
       if (!fun(x, v_c) || !std::isfinite(v_c)) {return false;}
       constexpr Integer dim_x{Vector::RowsAtCompileTime};
@@ -396,13 +410,14 @@ namespace IPsolver {
     * \param[in] x Point at which to compute Jacobian.
     * \param[in] fun Function to differentiate.
     * \param[out] jac Jacobian matrix.
+    * \param[in] epsilon Epsilon value for finite differences.
     * \return True if successful, false otherwise.
     */
     template <typename Function, typename Vector, typename Matrix>
-    bool Jacobian(Vector const & x, Function fun, Matrix & jac)
+    bool Jacobian(Vector const & x, Function fun, Matrix & jac, typename Vector::Scalar epsilon = Epsilon<typename Vector::Scalar>::EPSILON)
     {
       using Real = typename Vector::Scalar;
-      Epsilon<Real> eps;
+      Epsilon<Real> eps(epsilon);
       Vector v_c;
       if (!fun(x, v_c) || !v_c.allFinite()) {return false;}
       constexpr Integer dim_x{Vector::RowsAtCompileTime};
@@ -446,13 +461,14 @@ namespace IPsolver {
     * \param[in] x Point at which to compute Hessian.
     * \param[in] fun Function to differentiate.
     * \param[out] hes Hessian matrix.
+    * \param[in] epsilon Epsilon value for finite differences.
     * \return True if successful, false otherwise.
     */
     template <typename Function, typename Vector, typename Matrix>
-    bool Hessian(Vector const & x, Function fun, Matrix & hes)
+    bool Hessian(Vector const & x, Function fun, Matrix & hes, typename Vector::Scalar epsilon = Epsilon<typename Vector::Scalar>::EPSILON)
     {
       using Real = typename Vector::Scalar;
-      Epsilon<Real> eps;
+      Epsilon<Real> eps(epsilon);
       constexpr Integer dim_x = Vector::RowsAtCompileTime;
       hes.setZero();
       Real fc{0.0};
